@@ -52,6 +52,12 @@ public:
     float distance_y(const float y) {
         return abs(y - position_y_);
     }
+    float getPosition_x() {
+        return position_x_;
+    }
+    float getPosition_y() {
+        return position_y_;
+    }
 };
 
 enum class Crossing_color
@@ -95,6 +101,12 @@ public:
     }
     float distance_y(const float y) {
         return abs(y - position_y_);
+    }
+    float getPosition_x() {
+        return position_x_;
+    }
+    float getPosition_y() {
+        return position_y_;
     }
 };
 
