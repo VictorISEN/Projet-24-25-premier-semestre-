@@ -52,6 +52,10 @@ public:
     float distance_y(const float y) {
         return abs(y - position_y_);
     }
+    // Méthode existante : bool canPass() const
+    bool canPass() const {
+        return traffic_color_ == Traffic_color::green;
+    }
 };
 
 enum class Crossing_color
@@ -95,6 +99,10 @@ public:
     }
     float distance_y(const float y) {
         return abs(y - position_y_);
+    }
+    // Méthode existante : bool canCross() const
+    bool canCross() const {
+        return crossing_color_ == Crossing_color::green;
     }
 };
 

@@ -15,9 +15,11 @@ int main()
     std::map<std::string, Traffic_light> traffic_lights;
     std::map<std::string, Crossing> crossings;
 
+    // Initialisation des voitures
+   
+   // Initialisation des voitures avec une vitesse maximale réaliste
+// Initialisation des voitures avec une vitesse maximale réaliste
     std::vector<Car> cars;
-    cars.emplace_back(100.f, 360.f, 50.f, 30.f, sf::Vector2f(1.f, 0.f), 0.5f); // Voiture qui se déplace horizontalement
-    cars.emplace_back(360.f, 100.f, 30.f, 50.f, sf::Vector2f(0.f, 1.f), 0.5f); // Voiture qui se déplace verticalement
 
     traffic_lights["solferino"] = Traffic_light(Traffic_color::green, 0.0, 0.0);
     traffic_lights["vauban"] = Traffic_light(Traffic_color::red, 0.0, 0.0);
@@ -71,7 +73,7 @@ int main()
 
     while (window.isOpen())
     {
-       
+        
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -84,54 +86,69 @@ int main()
         }
         window.clear(sf::Color::Black);
 
+
+
+
+       
+
+        const float safe_distance = 150.0f; // Distance minimale entre deux voitures
+        const float stop_distance = 120.0f; // Distance pour commencer à s'arrêter au feu rouge
+
         for (auto it = cars.begin(); it != cars.end();) {
             Car& car = *it;
 
-            // Vérification si la voiture est proche ou dans le croisement
-            bool near_crossing = (car.getX() > l1 - 50 && car.getX() < l2 + 50) ||
-                (car.getY() > l1 - 50 && car.getY() < l2 + 50);
+            bool stop_for_red = false;
 
-            bool in_crossing = (car.getX() > l1 && car.getX() < l2) ||
-                (car.getY() > l1 && car.getY() < l2);
+            if (car.getDirection().x > 0) { // Voiture se déplaçant horizontalement
+                if (car.getX() > l1 - stop_distance && car.getX() < l1 && traffic_lights["solferino"].get_traffic_color() == Traffic_color::red) {
+                    stop_for_red = true;
+                }
+            }
+            else if (car.getDirection().y > 0) { // Voiture se déplaçant verticalement
+                if (car.getY() > l1 - stop_distance && car.getY() < l1 && traffic_lights["vauban"].get_traffic_color() == Traffic_color::red) {
+                    stop_for_red = true;
+                }
+            }
 
-            if (!car.isInCrossing()) {
-                // Si la voiture n'est pas encore dans le croisement
-                if (near_crossing && !in_crossing) {
-                    // Respecter les feux avant d'entrer dans le croisement
-                    if ((car.getX() > l1 - 50 && car.getX() < l2 + 50 && traffic_lights["solferino"].get_traffic_color() == Traffic_color::red) ||
-                        (car.getY() > l1 - 50 && car.getY() < l2 + 50 && traffic_lights["vauban"].get_traffic_color() == Traffic_color::red)) {
-                        car.stop(); // Arrêt au feu rouge
-                    }
-                    else {
-                        car.resume(0.5f); // Reprendre le mouvement si feu vert
-                    }
-                }
-                else if (in_crossing) {
-                    // Une fois que la voiture entre dans le croisement, elle continue
-                    car.setInCrossing(true);
-                    car.resume(0.5f);
-                }
+            if (stop_for_red) {
+                car.stop();
             }
             else {
-                // Si la voiture est déjà dans le croisement, elle continue jusqu'à sortir complètement
-                car.resume(0.5f);
+                bool too_close = false;
+                for (auto& other_car : cars) {
+                    if (&other_car != &car && car.getDirection() == other_car.getDirection()) {
+                        if ((car.getDirection().x > 0 && other_car.getX() > car.getX()) ||
+                            (car.getDirection().y > 0 && other_car.getY() > car.getY())) {
+                            if (car.getDistanceTo(other_car) < safe_distance) {
+                                too_close = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (!too_close) {
+                    car.accelerate();
+                }
+                else {
+                    car.stop();
+                }
             }
 
-            car.move(); // Déplacer la voiture
+            car.move();
 
             // Supprimer la voiture si elle sort de l'écran
             if (car.getX() > window.getSize().x || car.getY() > window.getSize().y) {
-                it = cars.erase(it); // Supprime la voiture et passe à la suivante
+                it = cars.erase(it);
             }
             else {
-                window.draw(car.getShape()); // Dessiner la voiture dans la fenêtre
+                window.draw(car.getShape());
                 ++it;
             }
         }
-
         static sf::Clock clock;
-        if (clock.getElapsedTime().asSeconds() > 3) { // Ajouter une voiture toutes les 3 secondes
+        if (clock.getElapsedTime().asSeconds() > 4) { // Ajouter une voiture toutes les 3 secondes
             cars.emplace_back(100.f, 360.f, 50.f, 30.f, sf::Vector2f(1.f, 0.f), 0.5f);
+            cars.emplace_back(360.f, 100.f, 30.f, 50.f, sf::Vector2f(0.f, 1.f), 0.5f);
             clock.restart();
         }
 
@@ -162,7 +179,6 @@ int main()
         window.draw(rectangle4);
 
         
-
         window.display();
     }
 
