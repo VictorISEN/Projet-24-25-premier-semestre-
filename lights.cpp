@@ -21,6 +21,18 @@ const sf::Color& get_SFML_color(const Traffic_light& traffic_light)
     return Orange;
 }
 
+const sf::Color& get_SFML_color(const Traffic_color& color)
+{
+    switch (color)
+    {
+    case Traffic_color::green:
+        return sf::Color::Green;
+    case Traffic_color::red:
+        return sf::Color::Red;
+    }
+    return Orange;
+}
+
 const sf::Color& get_SFML_color(const Crossing& crossing)
 {
     switch (crossing.get_crossing_color())
@@ -29,6 +41,13 @@ const sf::Color& get_SFML_color(const Crossing& crossing)
         return sf::Color::Green;
     }
 
+    return sf::Color::Red;
+}
+
+const sf::Color& get_SFML_color(const Crossing_color& color)
+{
+    if(color == Crossing_color::green)
+        return sf::Color::Green;
     return sf::Color::Red;
 }
 
@@ -66,8 +85,8 @@ void run_traffic_light(std::map<std::string, Traffic_light>& traffic_lights, std
             std::this_thread::sleep_for(delay_crossing);
             ++traffic_lights["vauban"];
             std::this_thread::sleep_for(delay_crossing);
-            ++crossings["left"];
-            ++crossings["right"];
+            crossings["left"].set_crossing_color(Crossing_color::green);
+            crossings["right"].set_crossing_color(Crossing_color::green);
         }
         else
         {
@@ -75,8 +94,8 @@ void run_traffic_light(std::map<std::string, Traffic_light>& traffic_lights, std
             std::this_thread::sleep_for(delay_crossing);
             ++traffic_lights["solferino"];
             std::this_thread::sleep_for(delay_crossing);
-            ++crossings["top"];
-            ++crossings["bottom"];
+            crossings["top"].set_crossing_color(Crossing_color::green);
+            crossings["bottom"].set_crossing_color(Crossing_color::green);
         }
     }
 }
@@ -114,7 +133,6 @@ std::ostream& operator<<(std::ostream& os, const Traffic_light& traffic_light)
     os << ptr;
     return os;
 }
-
 
 Crossing_color operator++(Crossing_color& crossing_color)
 {

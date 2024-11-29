@@ -16,15 +16,15 @@ int main()
     std::map<std::string, Traffic_light> traffic_lights;
     std::map<std::string, Crossing> crossings;
 
-    float l1 = 300, l2 = 500, size = 800, radius = 25;
+    float l1 = 400, l2 = 600, height = 1000, width = 1920, radius = 25;
 
-    traffic_lights["solferino"] = Traffic_light(Traffic_color::green, 325, 275);
-    traffic_lights["vauban"] = Traffic_light(Traffic_color::red, 275, 425);
+    traffic_lights["solferino"] = Traffic_light(Traffic_color::green, (l2 - l1) / 2 + l1, height/2);
+    traffic_lights["vauban"] = Traffic_light(Traffic_color::red, (l2 - l1) / 2 + l1, height/2);
 
-    crossings["top"] = Crossing(Crossing_color::red, 300, 200);
-    crossings["bottom"] = Crossing(Crossing_color::red, 300, 600);
-    crossings["left"] = Crossing(Crossing_color::red, 600, 300);
-    crossings["right"] = Crossing(Crossing_color::red, 200, 300);
+    crossings["top"] = Crossing(Crossing_color::red, (l2 - l1)/ 2 + l1 - 10, l1 - 15);
+    crossings["bottom"] = Crossing(Crossing_color::red, (l2 - l1) / 2 + l1 - 10, l2 + 5);
+    crossings["left"] = Crossing(Crossing_color::red, l1 - 15, height / 2 - 10);
+    crossings["right"] = Crossing(Crossing_color::red, l2 + 5, height / 2 - 10);
 
     std::vector<pedestrian> pedestrians;
 
@@ -37,44 +37,17 @@ int main()
     std::jthread thread_pedestrian(run_pedestrians,
         std::ref(pedestrians), std::ref(crossings), stopping.get_token());
 
-    sf::RenderWindow window(sf::VideoMode(800, 800), "My window");
+    sf::RenderWindow window(sf::VideoMode(width, height), "My window");
 
-    sf::Vertex line1[] = { sf::Vertex(sf::Vector2f(0, l1)), sf::Vertex(sf::Vector2f(size, l1)) };
-    sf::Vertex line2[] = { sf::Vertex(sf::Vector2f(0, l2)), sf::Vertex(sf::Vector2f(size, l2)) };
-    sf::Vertex line3[] = { sf::Vertex(sf::Vector2f(l1, 0)), sf::Vertex(sf::Vector2f(l1, size)) };
-    sf::Vertex line4[] = { sf::Vertex(sf::Vector2f(l2, 0)), sf::Vertex(sf::Vector2f(l2, size)) };
-    sf::Vertex centerH[] = { sf::Vertex(sf::Vector2f(0, size/2)), sf::Vertex(sf::Vector2f(size, size/2)) };
-    sf::Vertex centerV[] = { sf::Vertex(sf::Vector2f(size / 2, 0)), sf::Vertex(sf::Vector2f(size/2, size)) };
+    sf::Vertex centerLeft[] = { sf::Vertex(sf::Vector2f(0, height / 2)), sf::Vertex(sf::Vector2f(l1, height / 2)) };
+    sf::Vertex centerRight[] = { sf::Vertex(sf::Vector2f(l2, height / 2)), sf::Vertex(sf::Vector2f(width, height / 2)) };
+    sf::Vertex centerTop[] = { sf::Vertex(sf::Vector2f((l2 - l1) / 2 + l1, 0)), sf::Vertex(sf::Vector2f((l2 - l1) / 2 + l1, l1)) };
+    sf::Vertex centerBottom[] = { sf::Vertex(sf::Vector2f((l2 - l1) / 2 + l1, l2)), sf::Vertex(sf::Vector2f((l2 - l1) / 2 + l1, height)) };
 
-    sf::CircleShape lightTop(radius);
-    lightTop.setFillColor(sf::Color::Red);
-    lightTop.setOrigin(lightTop.getRadius() / 2, lightTop.getRadius() / 2);
-    lightTop.setPosition(traffic_lights["solferino"].getPosition_x(), traffic_lights["solferino"].getPosition_y());
-    sf::CircleShape lightBottom(radius);
-    lightBottom.setFillColor(sf::Color::Red);
-    lightBottom.setOrigin(lightBottom.getRadius() / 2, lightBottom.getRadius() / 2);
-    lightBottom.setPosition(traffic_lights["solferino"].getPosition_x() + 112, traffic_lights["solferino"].getPosition_y() + 225);
-    sf::CircleShape lightLeft(radius);
-    lightLeft.setFillColor(sf::Color::Red);
-    lightLeft.setOrigin(lightLeft.getRadius() / 2, lightLeft.getRadius() / 2);
-    lightLeft.setPosition(traffic_lights["vauban"].getPosition_x(), traffic_lights["vauban"].getPosition_y());
-    sf::CircleShape lightRight(radius);
-    lightRight.setFillColor(sf::Color::Red);
-    lightRight.setOrigin(lightRight.getRadius() / 2, lightRight.getRadius() / 2);
-    lightRight.setPosition(traffic_lights["vauban"].getPosition_x() + 225, traffic_lights["vauban"].getPosition_y() - 112);
-
-    sf::RectangleShape CTop(sf::Vector2f(l2 - l1, 50.f));
-    CTop.setFillColor(sf::Color::Red);
-    CTop.setPosition(l1, l1 - 100);
-    sf::RectangleShape CRight(sf::Vector2f(50.f, l2 - l1));
-    CRight.setFillColor(sf::Color::Red);
-    CRight.setPosition(l2 + 100, l1);
-    sf::RectangleShape CBottom(sf::Vector2f(l2 - l1, 50.f));
-    CBottom.setFillColor(sf::Color::Red);
-    CBottom.setPosition(l1, l2 + 100);
-    sf::RectangleShape CLeft(sf::Vector2f(50.f, l2 - l1));
-    CLeft.setFillColor(sf::Color::Red);
-    CLeft.setPosition(l1 - 100, l1);
+    sf::Vertex topOut[] = { sf::Vertex(sf::Vector2f(0, l1)), sf::Vertex(sf::Vector2f(width, l1)) };
+    sf::Vertex bottomOut[] = { sf::Vertex(sf::Vector2f(0, l2)), sf::Vertex(sf::Vector2f(width, l2)) };
+    sf::Vertex leftOut[] = { sf::Vertex(sf::Vector2f(l1, 0)), sf::Vertex(sf::Vector2f(l1, height)) };
+    sf::Vertex rightOut[] = { sf::Vertex(sf::Vector2f(l2, 0)), sf::Vertex(sf::Vector2f(l2, height)) };
 
     while (window.isOpen())
     {
@@ -90,32 +63,38 @@ int main()
         }
         window.clear(sf::Color::Black);
 
-        window.draw(line1, 2, sf::Lines);
-        window.draw(line2, 2, sf::Lines);
-        window.draw(line3, 2, sf::Lines);
-        window.draw(line4, 2, sf::Lines);
-        window.draw(centerH, 2, sf::Lines);
-        window.draw(centerV, 2, sf::Lines);
+        window.draw(centerLeft, 4, sf::Lines);
+        window.draw(centerRight, 4, sf::Lines);
+        window.draw(centerTop, 4, sf::Lines);
+        window.draw(centerBottom, 4, sf::Lines);
 
-        lightTop.setFillColor(get_SFML_color(traffic_lights["vauban"]));
-        lightBottom.setFillColor(get_SFML_color(traffic_lights["vauban"]));
-        lightLeft.setFillColor(get_SFML_color(traffic_lights["solferino"]));
-        lightRight.setFillColor(get_SFML_color(traffic_lights["solferino"]));
+        window.draw(topOut, 4, sf::Lines);
+        window.draw(bottomOut, 4, sf::Lines);
+        window.draw(leftOut, 4, sf::Lines);
+        window.draw(rightOut, 4, sf::Lines);
 
-        window.draw(lightTop);
-        window.draw(lightBottom);
-        window.draw(lightLeft);
-        window.draw(lightRight);
+        window.draw(crossings["top"].getShape());
+        window.draw(crossings["bottom"].getShape());
+        window.draw(crossings["left"].getShape());
+        window.draw(crossings["right"].getShape());
 
-        CTop.setFillColor(get_SFML_color(crossings["top"]));
-        CRight.setFillColor(get_SFML_color(crossings["right"]));
-        CBottom.setFillColor(get_SFML_color(crossings["bottom"]));
-        CLeft.setFillColor(get_SFML_color(crossings["left"]));
-
-        window.draw(CTop);
-        window.draw(CRight);
-        window.draw(CBottom);
-        window.draw(CLeft);
+        sf::CircleShape tmp;
+        tmp.setPosition(sf::Vector2f(l1 - traffic_lights["solferino"].getShape().getRadius(), l2 - 3 * traffic_lights["solferino"].getShape().getRadius()));
+        tmp.setRadius(traffic_lights["solferino"].getShape().getRadius());
+        tmp.setFillColor(get_SFML_color(traffic_lights["solferino"].get_traffic_color()));
+        window.draw(tmp);
+        tmp.setPosition(sf::Vector2f(l2 - traffic_lights["solferino"].getShape().getRadius(), l1 + traffic_lights["solferino"].getShape().getRadius()));
+        tmp.setRadius(traffic_lights["solferino"].getShape().getRadius());
+        tmp.setFillColor(get_SFML_color(traffic_lights["solferino"].get_traffic_color()));
+        window.draw(tmp);
+        tmp.setPosition(sf::Vector2f(l1 + traffic_lights["vauban"].getShape().getRadius(), l1 - traffic_lights["vauban"].getShape().getRadius()));
+        tmp.setRadius(traffic_lights["vauban"].getShape().getRadius());
+        tmp.setFillColor(get_SFML_color(traffic_lights["vauban"].get_traffic_color()));
+        window.draw(tmp);
+        tmp.setPosition(sf::Vector2f(l2 - 3 * traffic_lights["vauban"].getShape().getRadius(), l2 - traffic_lights["vauban"].getShape().getRadius()));
+        tmp.setRadius(traffic_lights["vauban"].getShape().getRadius());
+        tmp.setFillColor(get_SFML_color(traffic_lights["vauban"].get_traffic_color()));
+        window.draw(tmp);
 
         for (int i = 0; i < pedestrians.size(); i++)
         {

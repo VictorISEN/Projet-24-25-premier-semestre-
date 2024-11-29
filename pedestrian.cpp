@@ -19,87 +19,93 @@ bool pedestrian::canCross(Crossing crossing) {
 	return(false);
 };
 
+sf::RectangleShape pedestrian::getShape() {
+	return shape_;
+}
+
 void pedestrian::move(std::map<std::string, Crossing> &crossings) {
-	if (direction_ == entry::top) {
-		if ((position_y_ - pedestrianSpeed) < crossings["right"].getPosition_y() + 215 && (position_y_ - pedestrianSpeed) >= crossings["right"].getPosition_y() + 210) {
-			if (canCross(crossings["right"]) == true)
-				this->position_y_ -= pedestrianSpeed;
-		}
-		else
-			this->position_y_ -= pedestrianSpeed;
+	if (direction_ == sf::Vector2f(1, 0) && shape_.getPosition().x >= 340 && shape_.getPosition().x <= 350) {
+		if (crossings["bottom"].get_crossing_color() == Crossing_color::red)
+			return;
 	}
-	if (direction_ == entry::bottom) {
-		if ((position_y_ + pedestrianSpeed) > crossings["right"].getPosition_y() - 40 && (position_y_ + pedestrianSpeed) <= crossings["right"].getPosition_y() - 35) {
-			if (canCross(crossings["right"]) == true)
-				this->position_y_ += pedestrianSpeed;
-		}
-		else
-			this->position_y_ += pedestrianSpeed;
+	if (direction_ == sf::Vector2f(-1, 0) && shape_.getPosition().x >= 640 && shape_.getPosition().x <= 650) {
+		if (crossings["top"].get_crossing_color() == Crossing_color::red)
+			return;
 	}
-	if (direction_ == entry::left) {
-		if ((position_x_ - pedestrianSpeed) < (crossings["top"].getPosition_x() + 215) && (position_x_ - pedestrianSpeed) >= (crossings["top"].getPosition_x() + 210)) {
-			if (canCross(crossings["top"]) == true)
-				this->position_x_ -= pedestrianSpeed;
-		}
-		else
-			this->position_x_ -= pedestrianSpeed;
+	if (direction_ == sf::Vector2f(0, 1) && shape_.getPosition().y >= 340 && shape_.getPosition().y <= 350) {
+		if (crossings["left"].get_crossing_color() == Crossing_color::red)
+			return;
 	}
-	if (direction_ == entry::right) {
-		if ((position_x_ + pedestrianSpeed) > crossings["top"].getPosition_x() - 40 && (position_x_ + pedestrianSpeed) <= crossings["top"].getPosition_x() - 35) {
-			if (canCross(crossings["top"]) == true)
-				this->position_x_ += pedestrianSpeed;
-		}
-		else 
-			position_x_ += pedestrianSpeed;
+	if (direction_ == sf::Vector2f(0, -1) && shape_.getPosition().y >= 640 && shape_.getPosition().y <= 650) {
+		if (crossings["right"].get_crossing_color() == Crossing_color::red)
+			return;
 	}
-		
+	
+	shape_.move(direction_ * pedestrianSpeed);
+
 	return;
 }
 
 float pedestrian::getPosition_x() {
-	return position_x_;
+	return shape_.getPosition().x;
 }
 
 float pedestrian::getPosition_y() {
-	return position_y_;
+	return shape_.getPosition().y;
 }
 
 void pedestrian::setPosition_x(const float nb) {
-	position_x_ = position_x_ + nb;
+	shape_.setPosition(nb, shape_.getPosition().y);
 }
 
 void pedestrian::setPosition_y(const float nb) {
-	position_x_ = position_y_ + nb;
+	shape_.setPosition( shape_.getPosition().x, nb);
 }
 
-entry pedestrian::getDirection() {
+float pedestrian::distanceX(pedestrian& p) {
+	return abs(shape_.getPosition().x - p.getPosition_x());
+}
+
+float pedestrian::distanceY(pedestrian& p) {
+	return abs(shape_.getPosition().y - p.getPosition_y());
+}
+
+sf::Vector2f pedestrian::getDirection() {
 	return direction_;
 }
 
-bool canMove(std::vector<pedestrian>& pedestrians, pedestrian& p, int j) {
+sf::Vector2f pedestrian::getPosition() {
+	return shape_.getPosition();
+}
+
+bool canMove(std::vector<pedestrian>& pedestrians, pedestrian& p) {
 	for (int i = 0; i < pedestrians.size(); i++)
 	{
-		if (j != i) {
-			switch (p.getDirection())
-			{
-			case entry::top:
-				if (pedestrians.at(i).getDirection() == entry::top && (p.getPosition_x() - pedestrianSpeed - 25) < pedestrians.at(i).getPosition_x())
-					return false;
-				break;
-			case entry::bottom:
-				if (pedestrians.at(i).getDirection() == entry::bottom && (p.getPosition_y() + pedestrianSpeed + 25) > pedestrians.at(i).getPosition_y())
-					return false;
-				break;
-			case entry::left:
-				if (pedestrians.at(i).getDirection() == entry::left && (p.getPosition_x() - pedestrianSpeed - 25) < pedestrians.at(i).getPosition_x())
-					return false;
-				break;
-			case entry::right:
-				if (pedestrians.at(i).getDirection() == entry::right && (p.getPosition_x() + pedestrianSpeed + 25) > pedestrians.at(i).getPosition_x())
-					return false;
-				break;
-			default:
-				return false;
+		if (p.getPosition() != pedestrians.at(i).getPosition()) {
+			if (p.getDirection().y == 1) {
+				if (pedestrians.at(i).getPosition_y() > p.getPosition().y && pedestrians.at(i).getPosition_y() <= p.getPosition().y + 50) {
+					if(pedestrians.at(i).getPosition_x() > p.getPosition().x - 30 && pedestrians.at(i).getPosition_x() <= p.getPosition().x + 50)
+						return false;
+				}
+					
+			}
+			if (p.getDirection().y == -1) {
+				if (pedestrians.at(i).getPosition_y() < p.getPosition().y && pedestrians.at(i).getPosition_y() >= p.getPosition().y - 50) {
+					if(pedestrians.at(i).getPosition_x() > p.getPosition().x - 30 && pedestrians.at(i).getPosition_x() <= p.getPosition().x + 50)
+						return false;
+				}
+			}
+			if (p.getDirection().x == 1) {
+				if (pedestrians.at(i).getPosition_x() > p.getPosition().x && pedestrians.at(i).getPosition_x() <= p.getPosition().x + 50) {
+					if (pedestrians.at(i).getPosition_y() > p.getPosition().y - 30 && pedestrians.at(i).getPosition_y() <= p.getPosition().y + 40)
+						return false;
+				}
+			}
+			if (p.getDirection().x == pedestrians.at(i).getDirection().x && p.getDirection().x == -1) {
+				if (pedestrians.at(i).getPosition_x() < p.getPosition().x && pedestrians.at(i).getPosition_x() >= p.getPosition().x - 50) {
+					if (pedestrians.at(i).getPosition_y() > p.getPosition().y - 30 && pedestrians.at(i).getPosition_y() <= p.getPosition().y + 50)
+						return false;
+				}
 			}
 		}
 	}
@@ -107,51 +113,51 @@ bool canMove(std::vector<pedestrian>& pedestrians, pedestrian& p, int j) {
 }
 
 void generatePedestrians(std::vector<pedestrian>& pedestrians) {
-	if (pedestrians.size() >= 20)
+	if (pedestrians.size() >= 15)
 		return;
-	int rdm = rand() % 160;
+	int rdm = rand() % 240;
 	bool freeSpace = true;
-	if (rdm == 0) {
-		for (int i = 0; i < pedestrians.size(); i++)
-		{
-			if (pedestrians.at(i).getPosition_x() == 200 && pedestrians.at(i).getPosition_y() < 50)
+	switch (rdm)
+	{
+	case 0 :
+		for (int i = 0; i < pedestrians.size(); i++){
+			if (pedestrians.at(i).getPosition_x() == 375 && pedestrians.at(i).getPosition_y() < 50)
 				freeSpace = false;
 				
 		}
 		if(freeSpace == true)
-			pedestrians.push_back(pedestrian(entry::top, entry::bottom, 200, 0, entry::bottom));
-	}
-
-	if (rdm == 2) {
+			pedestrians.push_back(pedestrian(375, 0, entry::bottom, sf::Vector2f(0, 1)));
+		break;
+	case 2 :
 		for (int i = 0; i < pedestrians.size(); i++)
 		{
-			if (pedestrians.at(i).getPosition_x() == 600 && pedestrians.at(i).getPosition_y() > 750)
+			if (pedestrians.at(i).getPosition_x() == 600 && pedestrians.at(i).getPosition_y() > 950)
 				freeSpace = false;
 		}
 		if (freeSpace == true)
-			pedestrians.push_back(pedestrian(entry::bottom, entry::top, 600, 775, entry::top));
-	}
-
-	if (rdm == 4) {
+			pedestrians.push_back(pedestrian(600, 1000, entry::top, sf::Vector2f(0, -1)));
+		break;
+	case 4:
 		for (int i = 0; i < pedestrians.size(); i++)
 		{
-			if (pedestrians.at(i).getPosition_y() == 200 && pedestrians.at(i).getPosition_x() < 50)
+			if (pedestrians.at(i).getPosition_y() == 600 && pedestrians.at(i).getPosition_x() < 50)
 				freeSpace = false;
 		}
 		if (freeSpace == true)
-			pedestrians.push_back(pedestrian(entry::left, entry::right, 0, 200, entry::right));
-	}
-
-	if (rdm == 6) {
+			pedestrians.push_back(pedestrian(0, 600, entry::right, sf::Vector2f(1, 0)));
+		break;
+	case 6:
 		for (int i = 0; i < pedestrians.size(); i++)
 		{
-			if (pedestrians.at(i).getPosition_y() == 600 && pedestrians.at(i).getPosition_x() > 750)
+			if (pedestrians.at(i).getPosition_y() == 375 && pedestrians.at(i).getPosition_x() > 1850)
 				freeSpace = false;
 		}
 		if (freeSpace == true)
-			pedestrians.push_back(pedestrian(entry::right, entry::left, 775, 600, entry::left));
+			pedestrians.push_back(pedestrian(1900, 375, entry::left, sf::Vector2f(-1, 0)));
+		break;
+	default:
+		break;
 	}
-
 	return;
 }
 
@@ -162,9 +168,9 @@ void run_pedestrians(std::vector<pedestrian>& pedestrians, std::map<std::string,
 		generatePedestrians(pedestrians);
 		for (int i = 0; i < pedestrians.size(); i++)
 		{
-			if (canMove(pedestrians, pedestrians.at(i), i) == true) {
+			if (canMove(pedestrians, pedestrians.at(i)) == true) {
 				pedestrians.at(i).move(crossings);
-				if (pedestrians.at(i).getPosition_x() > 800 || pedestrians.at(i).getPosition_y() > 800 || pedestrians.at(i).getPosition_x() < 0 || pedestrians.at(i).getPosition_y() < 0)
+				if (pedestrians.at(i).getPosition_x() >= 1900 || pedestrians.at(i).getPosition_y() >= 1000 || pedestrians.at(i).getPosition_x() <= 0 || pedestrians.at(i).getPosition_y() <= 0)
 					pedestrians.erase(pedestrians.begin() + i);
 			}
 		}

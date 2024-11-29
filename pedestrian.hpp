@@ -12,6 +12,7 @@
 using namespace std::chrono_literals;
 
 const float pedestrianSpeed = 1;
+const float pedestrianSize = 20;
 const auto speed_delay = 0.01s;
 
 enum class entry
@@ -25,24 +26,32 @@ enum class entry
 class pedestrian
 {
 private :
-	entry origin_;
 	entry destination_;
-	float position_x_;
-	float position_y_;
-	entry direction_;
+	sf::RectangleShape shape_;
+	sf::Vector2f direction_;
 public:
-	explicit pedestrian(entry origin, entry destination, float potision_x, float position_y, entry direction) : origin_{ origin }, destination_{ destination }, position_x_{ potision_x }, position_y_{ position_y }, direction_{direction} {}
+	explicit pedestrian(float posX, float posY, const entry destination, const sf::Vector2f direction) 
+		: destination_{ destination }, direction_{direction} {
+		shape_.setFillColor(sf::Color::White);
+		shape_.setSize(sf::Vector2f(pedestrianSize, pedestrianSize));
+		shape_.setPosition(posX, posY);
+		shape_.setOrigin(pedestrianSize / 2, pedestrianSize / 2);
+	}
 	void move(std::map<std::string, Crossing> &crossings);
 	bool canCross(const Crossing crossing);
 	float getPosition_x();
 	float getPosition_y();
-	entry getDirection();
+	sf::Vector2f getDirection();
+	sf::Vector2f getPosition();
 	void setPosition_x(const float nb);
 	void setPosition_y(const float nb);
+	sf::RectangleShape getShape();
+	float distanceX(pedestrian& p);
+	float distanceY(pedestrian& p);
 };
 
 void run_pedestrians(std::vector<pedestrian>& pedestrians, std::map<std::string, Crossing> &crossings, std::stop_token stop_token);
 
 void generatePedestrians(std::vector<pedestrian>& pedestrians);
 
-bool canMove(std::vector<pedestrian>& pedestrians, pedestrian& p, int j);
+bool canMove(std::vector<pedestrian>& pedestrians, pedestrian& p);
