@@ -11,6 +11,7 @@
 
 int main()
 {
+    srand(static_cast<unsigned>(time(nullptr)));
     std::stop_source stopping;
     std::map<std::string, Traffic_light> traffic_lights;
     std::map<std::string, Crossing> crossings;
@@ -26,8 +27,6 @@ int main()
     crossings["right"] = Crossing(Crossing_color::red, 200, 300);
 
     std::vector<pedestrian> pedestrians;
-    pedestrian p = pedestrian(entry::top, entry::bottom, 200, 0, entry::bottom);
-    pedestrians.push_back(p);
 
     std::jthread thread_traffic_light(run_traffic_light,
         std::ref(traffic_lights), std::ref(crossings), stopping.get_token());
@@ -36,7 +35,7 @@ int main()
         std::ref(traffic_lights), std::ref(crossings), stopping.get_token());
 
     std::jthread thread_pedestrian(run_pedestrians,
-        std::ref(pedestrians), stopping.get_token());
+        std::ref(pedestrians), std::ref(crossings), stopping.get_token());
 
     sf::RenderWindow window(sf::VideoMode(800, 800), "My window");
 
@@ -120,7 +119,7 @@ int main()
 
         for (int i = 0; i < pedestrians.size(); i++)
         {
-            sf::RectangleShape rectangle(sf::Vector2f(50, 50));
+            sf::RectangleShape rectangle(sf::Vector2f(25, 25));
             rectangle.setFillColor(sf::Color::Magenta);
             rectangle.setPosition(pedestrians.at(i).getPosition_x(), pedestrians.at(i).getPosition_y()); 
             window.draw(rectangle);
