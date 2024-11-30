@@ -84,26 +84,26 @@ bool canMove(std::vector<pedestrian>& pedestrians, pedestrian& p) {
 		if (p.getPosition() != pedestrians.at(i).getPosition()) {
 			if (p.getDirection().y == 1) {
 				if (pedestrians.at(i).getPosition_y() > p.getPosition().y && pedestrians.at(i).getPosition_y() <= p.getPosition().y + 50) {
-					if(pedestrians.at(i).getPosition_x() > p.getPosition().x - 30 && pedestrians.at(i).getPosition_x() <= p.getPosition().x + 50)
+					if(pedestrians.at(i).getPosition_x() > p.getPosition().x - 20 && pedestrians.at(i).getPosition_x() <= p.getPosition().x + 20)
 						return false;
 				}
 					
 			}
 			if (p.getDirection().y == -1) {
 				if (pedestrians.at(i).getPosition_y() < p.getPosition().y && pedestrians.at(i).getPosition_y() >= p.getPosition().y - 50) {
-					if(pedestrians.at(i).getPosition_x() > p.getPosition().x - 30 && pedestrians.at(i).getPosition_x() <= p.getPosition().x + 50)
+					if(pedestrians.at(i).getPosition_x() > p.getPosition().x - 20 && pedestrians.at(i).getPosition_x() <= p.getPosition().x + 20)
 						return false;
 				}
 			}
 			if (p.getDirection().x == 1) {
 				if (pedestrians.at(i).getPosition_x() > p.getPosition().x && pedestrians.at(i).getPosition_x() <= p.getPosition().x + 50) {
-					if (pedestrians.at(i).getPosition_y() > p.getPosition().y - 30 && pedestrians.at(i).getPosition_y() <= p.getPosition().y + 40)
+					if (pedestrians.at(i).getPosition_y() > p.getPosition().y - 20 && pedestrians.at(i).getPosition_y() <= p.getPosition().y + 20)
 						return false;
 				}
 			}
 			if (p.getDirection().x == pedestrians.at(i).getDirection().x && p.getDirection().x == -1) {
 				if (pedestrians.at(i).getPosition_x() < p.getPosition().x && pedestrians.at(i).getPosition_x() >= p.getPosition().x - 50) {
-					if (pedestrians.at(i).getPosition_y() > p.getPosition().y - 30 && pedestrians.at(i).getPosition_y() <= p.getPosition().y + 50)
+					if (pedestrians.at(i).getPosition_y() > p.getPosition().y - 20 && pedestrians.at(i).getPosition_y() <= p.getPosition().y + 20)
 						return false;
 				}
 			}
@@ -121,39 +121,39 @@ void generatePedestrians(std::vector<pedestrian>& pedestrians) {
 	{
 	case 0 :
 		for (int i = 0; i < pedestrians.size(); i++){
-			if (pedestrians.at(i).getPosition_x() == 375 && pedestrians.at(i).getPosition_y() < 50)
+			if (pedestrians.at(i).getPosition_x() == 390 && pedestrians.at(i).getPosition_y() < 50)
 				freeSpace = false;
 				
 		}
 		if(freeSpace == true)
-			pedestrians.push_back(pedestrian(375, 0, entry::bottom, sf::Vector2f(0, 1)));
+			pedestrians.push_back(pedestrian(390, 0, entry::bottom, sf::Vector2f(0, 1)));
 		break;
 	case 2 :
 		for (int i = 0; i < pedestrians.size(); i++)
 		{
-			if (pedestrians.at(i).getPosition_x() == 600 && pedestrians.at(i).getPosition_y() > 950)
+			if (pedestrians.at(i).getPosition_x() == 610 && pedestrians.at(i).getPosition_y() > 950)
 				freeSpace = false;
 		}
 		if (freeSpace == true)
-			pedestrians.push_back(pedestrian(600, 1000, entry::top, sf::Vector2f(0, -1)));
+			pedestrians.push_back(pedestrian(610, 1000, entry::top, sf::Vector2f(0, -1)));
 		break;
 	case 4:
 		for (int i = 0; i < pedestrians.size(); i++)
 		{
-			if (pedestrians.at(i).getPosition_y() == 600 && pedestrians.at(i).getPosition_x() < 50)
+			if (pedestrians.at(i).getPosition_y() == 610 && pedestrians.at(i).getPosition_x() < 50)
 				freeSpace = false;
 		}
 		if (freeSpace == true)
-			pedestrians.push_back(pedestrian(0, 600, entry::right, sf::Vector2f(1, 0)));
+			pedestrians.push_back(pedestrian(0, 610, entry::right, sf::Vector2f(1, 0)));
 		break;
 	case 6:
 		for (int i = 0; i < pedestrians.size(); i++)
 		{
-			if (pedestrians.at(i).getPosition_y() == 375 && pedestrians.at(i).getPosition_x() > 1850)
+			if (pedestrians.at(i).getPosition_y() == 3905 && pedestrians.at(i).getPosition_x() > 1850)
 				freeSpace = false;
 		}
 		if (freeSpace == true)
-			pedestrians.push_back(pedestrian(1900, 375, entry::left, sf::Vector2f(-1, 0)));
+			pedestrians.push_back(pedestrian(1900, 390, entry::left, sf::Vector2f(-1, 0)));
 		break;
 	default:
 		break;

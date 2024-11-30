@@ -1,0 +1,139 @@
+#pragma once
+// condition_variable::wait(with predicate)
+#include <iostream> // std::cout
+#include <thread>   // std::thread, std::this_thread::yield
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <string>
+#include <map>
+#include "lights.hpp"
+#include "pedestrian.hpp"
+#include <cstdlib>
+#include <ctime>
+#include "car.hpp"
+
+const float l1 = 400;
+const float l2 = 600;
+void generate_cars(std::vector<Car>& cars) {
+    if (cars.size() >= 10)
+        return;
+        
+    int rdm = rand() % 10;
+    bool freeSpace = true;
+    switch (rdm)
+    {
+    case 0:
+        for (int i = 0; i < cars.size(); i++) {
+            if (cars.at(i).getX() == 500 && cars.at(i).getY() < width_car + safe_distance_car)
+                freeSpace = false;
+
+        }
+        if (freeSpace == true)
+            cars.push_back(Car(500, 0, sf::Vector2f(0, 1), entry::bottom));
+        break;
+    case 2:
+        for (int i = 0; i < cars.size(); i++)
+        {
+            if (cars.at(i).getX() == 470 && cars.at(i).getY() > 1000 - width_car - safe_distance_car)
+                freeSpace = false;
+        }
+        if (freeSpace == true)
+            cars.push_back(Car(470, 1000, sf::Vector2f(0, -1), entry::top));
+        break;
+    case 4:
+        for (int i = 0; i < cars.size(); i++)
+        {
+            if (cars.at(i).getY() == 470 && cars.at(i).getX() < width_car + safe_distance_car)
+                freeSpace = false;
+        }
+        if (freeSpace == true) {
+            cars.push_back(Car(0, 470, sf::Vector2f(1, 0), entry::right));
+            cars.at(cars.size() - 1).getShape().rotate(90);
+        }
+        break;
+    case 6:
+        for (int i = 0; i < cars.size(); i++)
+        {
+            if (cars.at(i).getY() == 500 && cars.at(i).getX() > 1900 - width_car - safe_distance_car)
+                freeSpace = false;
+        }
+        if (freeSpace == true) {
+            ;cars.push_back(Car(1900, 500, sf::Vector2f(-1, 0), entry::left));
+            cars.at(cars.size() - 1).getShape().rotate(90);
+        }
+        break;
+    default:
+        break;
+    }
+    return;
+}
+
+void run_cars(std::vector<Car>& cars, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::stop_token stop_token) {
+    while (!stop_token.stop_requested())
+    {
+        generate_cars(cars);
+        for (auto it = cars.begin(); it != cars.end();) {
+            Car& car = *it;
+
+            bool stop_for_red = false;
+
+            if (car.getDirection().x > 0) { // Voiture se déplaçant horizontalement
+                if (car.getX() > l1 - stop_distance_car && car.getX() < l1 && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                    stop_for_red = true;
+                }
+            }
+            if (car.getDirection().x < 0) { // Voiture se déplaçant horizontalement
+                if (car.getX() < l2 + stop_distance_car + height_car  && car.getX() > l2 && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                    stop_for_red = true;
+                }
+            }
+            if (car.getDirection().y > 0) { // Voiture se déplaçant verticalement
+                if (car.getY() > l1 - stop_distance_car - height_car && car.getY() < l1 && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                    stop_for_red = true;
+                }
+            }
+            if (car.getDirection().y < 0) { // Voiture se déplaçant verticalement
+                if (car.getY() < l2 + stop_distance_car && car.getY() > l2 && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                    stop_for_red = true;
+                }
+            }
+
+            if (stop_for_red) {
+                car.stop();
+            }
+            else {
+                bool too_close = false;
+                for (auto& other_car : cars) {
+                    if (&other_car != &car && car.getDirection() == other_car.getDirection()) {
+                        if ((car.getDirection().x > 0 && other_car.getX() > car.getX()) ||
+                            (car.getDirection().y > 0 && other_car.getY() > car.getY()) ||
+                            (car.getDirection().x < 0 && other_car.getX() < car.getX()) ||
+                            (car.getDirection().y < 0 && other_car.getY() < car.getY())) {
+                            if (car.getDistanceTo(other_car) < safe_distance_car) {
+                                too_close = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (!too_close) {
+                    car.accelerate();
+                }
+                else {
+                    car.stop();
+                }
+            }
+
+            car.move();
+
+            // Supprimer la voiture si elle sort de l'écran
+            if (car.getX() > 1900 || car.getY() > 1000 || car.getX() < 0 || car.getY() < 0) {
+                std::cout << std::endl << std::endl << "gg" << std::endl << std::endl;
+                it = cars.erase(it);
+            }
+            else
+                ++it;
+        }
+        std::this_thread::sleep_for(delay_speed);
+    }
+}

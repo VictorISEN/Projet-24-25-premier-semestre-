@@ -8,6 +8,7 @@
 #include <vector>
 #include "lights.hpp"
 #include "pedestrian.hpp"
+#include "car.hpp"
 
 int main()
 {
@@ -15,6 +16,7 @@ int main()
     std::stop_source stopping;
     std::map<std::string, Traffic_light> traffic_lights;
     std::map<std::string, Crossing> crossings;
+    std::vector<Car> cars;
 
     float l1 = 400, l2 = 600, height = 1000, width = 1920, radius = 25;
 
@@ -36,6 +38,9 @@ int main()
 
     std::jthread thread_pedestrian(run_pedestrians,
         std::ref(pedestrians), std::ref(crossings), stopping.get_token());
+
+    std::jthread thread_cars(run_cars,
+        std::ref(cars), std::ref(crossings), std::ref(traffic_lights), stopping.get_token());
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
 
@@ -98,10 +103,12 @@ int main()
 
         for (int i = 0; i < pedestrians.size(); i++)
         {
-            sf::RectangleShape rectangle(sf::Vector2f(25, 25));
-            rectangle.setFillColor(sf::Color::Magenta);
-            rectangle.setPosition(pedestrians.at(i).getPosition_x(), pedestrians.at(i).getPosition_y()); 
-            window.draw(rectangle);
+            window.draw(pedestrians.at(i).getShape());
+        }
+
+        for (int i = 0; i < cars.size(); i++)
+        {
+            window.draw(cars.at(i).getShape());
         }
 
         window.display();
