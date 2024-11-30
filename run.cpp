@@ -9,6 +9,8 @@
 #include "lights.hpp"
 #include "pedestrian.hpp"
 #include "car.hpp"
+#include "bus.hpp"
+#include "bikes.hpp"
 
 int main()
 {
@@ -17,6 +19,8 @@ int main()
     std::map<std::string, Traffic_light> traffic_lights;
     std::map<std::string, Crossing> crossings;
     std::vector<Car> cars;
+    std::vector<Bus> buses;
+    std::vector<Bike> bikes;
 
     float l1 = 400, l2 = 600, height = 1000, width = 1920, radius = 25;
 
@@ -41,6 +45,12 @@ int main()
 
     std::jthread thread_cars(run_cars,
         std::ref(cars), std::ref(crossings), std::ref(traffic_lights), stopping.get_token());
+
+    std::jthread thread_buses(run_buses,
+        std::ref(buses), std::ref(crossings), std::ref(traffic_lights), stopping.get_token());
+
+    std::jthread thread_bikes(run_bikes,
+        std::ref(bikes), std::ref(crossings), std::ref(traffic_lights), stopping.get_token());
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
 
@@ -109,6 +119,14 @@ int main()
         for (int i = 0; i < cars.size(); i++)
         {
             window.draw(cars.at(i).getShape());
+        }
+        for (int i = 0; i < buses.size(); i++)
+        {
+            window.draw(buses.at(i).getShape());
+        }
+        for (int i = 0; i < bikes.size(); i++)
+        {
+            window.draw(bikes.at(i).getShape());
         }
 
         window.display();

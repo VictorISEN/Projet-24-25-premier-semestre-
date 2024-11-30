@@ -24,41 +24,41 @@ void generate_cars(std::vector<Car>& cars) {
     {
     case 0:
         for (int i = 0; i < cars.size(); i++) {
-            if (cars.at(i).getX() == 500 && cars.at(i).getY() < width_car + safe_distance_car)
+            if (cars.at(i).getX() == 470 && cars.at(i).getY() < width_car + safe_distance_car)
                 freeSpace = false;
 
         }
         if (freeSpace == true)
-            cars.push_back(Car(500, 0, sf::Vector2f(0, 1), entry::bottom));
+            cars.push_back(Car(470, 0, sf::Vector2f(0, 1), entry::bottom));
         break;
     case 2:
         for (int i = 0; i < cars.size(); i++)
         {
-            if (cars.at(i).getX() == 470 && cars.at(i).getY() > 1000 - width_car - safe_distance_car)
+            if (cars.at(i).getX() == 500 && cars.at(i).getY() > 1000 - width_car - safe_distance_car)
                 freeSpace = false;
         }
         if (freeSpace == true)
-            cars.push_back(Car(470, 1000, sf::Vector2f(0, -1), entry::top));
+            cars.push_back(Car(500, 1000, sf::Vector2f(0, -1), entry::top));
         break;
     case 4:
         for (int i = 0; i < cars.size(); i++)
         {
-            if (cars.at(i).getY() == 470 && cars.at(i).getX() < width_car + safe_distance_car)
+            if (cars.at(i).getY() == 500 && cars.at(i).getX() < width_car + safe_distance_car)
                 freeSpace = false;
         }
         if (freeSpace == true) {
-            cars.push_back(Car(0, 470, sf::Vector2f(1, 0), entry::right));
+            cars.push_back(Car(0, 500, sf::Vector2f(1, 0), entry::right));
             cars.at(cars.size() - 1).getShape().rotate(90);
         }
         break;
     case 6:
         for (int i = 0; i < cars.size(); i++)
         {
-            if (cars.at(i).getY() == 500 && cars.at(i).getX() > 1900 - width_car - safe_distance_car)
+            if (cars.at(i).getY() == 470 && cars.at(i).getX() > 1900 - width_car - safe_distance_car)
                 freeSpace = false;
         }
         if (freeSpace == true) {
-            ;cars.push_back(Car(1900, 500, sf::Vector2f(-1, 0), entry::left));
+            ;cars.push_back(Car(1900, 470, sf::Vector2f(-1, 0), entry::left));
             cars.at(cars.size() - 1).getShape().rotate(90);
         }
         break;
