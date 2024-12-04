@@ -15,6 +15,7 @@
 
 const float l1 = 400;
 const float l2 = 600;
+
 void generate_buses(std::vector<Bus>& buses) {
     if (buses.size() >= 6)
         return;
@@ -27,39 +28,96 @@ void generate_buses(std::vector<Bus>& buses) {
         for (int i = 0; i < buses.size(); i++) {
             if (buses.at(i).getX() == 428 && buses.at(i).getY() < height_bus + safe_distance_bus)
                 freeSpace = false;
-
         }
-        if (freeSpace == true)
-            buses.push_back(Bus(428, 0, sf::Vector2f(0, 1), entry::bottom));
+        if (freeSpace == true) {
+            int rdm2 = rand() % 3;
+            entry dest;
+            switch (rdm2)
+            {
+            case 0:
+                dest = entry::bottom;
+                break;
+            case 1:
+                dest = entry::left;
+                break;
+            case 2:
+                dest = entry::right;
+                break;
+            }
+            buses.push_back(Bus(428, 0, sf::Vector2f(0, 1), dest));
+        }
         break;
-    case 2:
+    case 1:
         for (int i = 0; i < buses.size(); i++)
         {
             if (buses.at(i).getX() == 532 && buses.at(i).getY() > 1000 - height_bus - safe_distance_bus)
                 freeSpace = false;
         }
-        if (freeSpace == true)
-            buses.push_back(Bus(532, 1000, sf::Vector2f(0, -1), entry::top));
+        if (freeSpace == true) {
+            int rdm2 = rand() % 3;
+            entry dest;
+            switch (rdm2)
+            {
+            case 0:
+                dest = entry::top;
+                break;
+            case 1:
+                dest = entry::left;
+                break;
+            case 2:
+                dest = entry::right;
+                break;
+            }
+            buses.push_back(Bus(532, 1000, sf::Vector2f(0, -1), dest));
+        }
         break;
-    case 4:
+    case 2:
         for (int i = 0; i < buses.size(); i++)
         {
             if (buses.at(i).getY() == 532 && buses.at(i).getX() < height_bus + safe_distance_bus)
                 freeSpace = false;
         }
         if (freeSpace == true) {
-            buses.push_back(Bus(0, 532, sf::Vector2f(1, 0), entry::right));
+            int rdm2 = rand() % 3;
+            entry dest;
+            switch (rdm2)
+            {
+            case 0:
+                dest = entry::bottom;
+                break;
+            case 1:
+                dest = entry::right;
+                break;
+            case 2:
+                dest = entry::top;
+                break;
+            }
+            buses.push_back(Bus(0, 532, sf::Vector2f(1, 0), dest));
             buses.at(buses.size() - 1).getShape().rotate(90);
         }
         break;
-    case 6:
+    case 3:
         for (int i = 0; i < buses.size(); i++)
         {
             if (buses.at(i).getY() == 428 && buses.at(i).getX() > 1900 - height_bus - safe_distance_bus)
                 freeSpace = false;
         }
         if (freeSpace == true) {
-            buses.push_back(Bus(1900, 428, sf::Vector2f(-1, 0), entry::left));
+            int rdm2 = rand() % 3;
+            entry dest;
+            switch (rdm2)
+            {
+            case 0:
+                dest = entry::bottom;
+                break;
+            case 1:
+                dest = entry::top;
+                break;
+            case 2:
+                dest = entry::left;
+                break;
+            }
+            buses.push_back(Bus(1900, 428, sf::Vector2f(-1, 0), dest));
             buses.at(buses.size() - 1).getShape().rotate(90);
         }
         break;

@@ -27,39 +27,96 @@ void generate_bikes(std::vector<Bike>& bikes) {
         for (int i = 0; i < bikes.size(); i++) {
             if (bikes.at(i).getX() == 411 && bikes.at(i).getY() < height_bike + safe_distance_bike)
                 freeSpace = false;
-
         }
-        if (freeSpace == true)
-            bikes.push_back(Bike(411, 0, sf::Vector2f(0, 1), entry::bottom));
+        if (freeSpace == true) {
+            int rdm2 = rand() % 3;
+            entry dest;
+            switch (rdm2)
+            {
+            case 0:
+                dest = entry::bottom;
+                break;
+            case 1:
+                dest = entry::left;
+                break;
+            case 2:
+                dest = entry::right;
+                break;
+            }
+            bikes.push_back(Bike(411, 0, sf::Vector2f(0, 1), dest));
+        }
         break;
-    case 2:
+    case 1:
         for (int i = 0; i < bikes.size(); i++)
         {
             if (bikes.at(i).getX() == 574 && bikes.at(i).getY() > 1000 - height_bike - safe_distance_bike)
                 freeSpace = false;
         }
-        if (freeSpace == true)
-            bikes.push_back(Bike(574, 1000, sf::Vector2f(0, -1), entry::top));
+        if (freeSpace == true) {
+            int rdm2 = rand() % 3;
+            entry dest;
+            switch (rdm2)
+            {
+            case 0:
+                dest = entry::top;
+                break;
+            case 1:
+                dest = entry::left;
+                break;
+            case 2:
+                dest = entry::right;
+                break;
+            }
+            bikes.push_back(Bike(574, 1000, sf::Vector2f(0, -1), dest));
+        } 
         break;
-    case 4:
+    case 2:
         for (int i = 0; i < bikes.size(); i++)
         {
             if (bikes.at(i).getY() == 574 && bikes.at(i).getX() < height_bike + safe_distance_bike)
                 freeSpace = false;
         }
         if (freeSpace == true) {
-            bikes.push_back(Bike(0, 574, sf::Vector2f(1, 0), entry::right));
+            int rdm2 = rand() % 3;
+            entry dest;
+            switch (rdm2)
+            {
+            case 0:
+                dest = entry::bottom;
+                break;
+            case 1:
+                dest = entry::right;
+                break;
+            case 2:
+                dest = entry::top;
+                break;
+            }
+            bikes.push_back(Bike(0, 574, sf::Vector2f(1, 0), dest));
             bikes.at(bikes.size() - 1).getShape().rotate(90);
         }
         break;
-    case 6:
+    case 3  :
         for (int i = 0; i < bikes.size(); i++)
         {
             if (bikes.at(i).getY() == 411 && bikes.at(i).getX() > 1900 - height_bike - safe_distance_bike)
                 freeSpace = false;
         }
         if (freeSpace == true) {
-            bikes.push_back(Bike(1900, 411, sf::Vector2f(-1, 0), entry::left));
+            int rdm2 = rand() % 3;
+            entry dest;
+            switch (rdm2)
+            {
+            case 0:
+                dest = entry::bottom;
+                break;
+            case 1:
+                dest = entry::top;
+                break;
+            case 2:
+                dest = entry::left;
+                break;
+            }
+            bikes.push_back(Bike(1900, 411, sf::Vector2f(-1, 0), dest));
             bikes.at(bikes.size() - 1).getShape().rotate(90);
         }
         break;
