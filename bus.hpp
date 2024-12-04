@@ -1,5 +1,5 @@
-const float safe_distance_bus = 335.0f; // Distance minimale entre deux voitures
-const float stop_distance_bus = 175.0f; // Distance pour commencer à s'arrêter au feu rouge
+const float safe_distance_bus = 350.0f; // Distance minimale entre deux voitures
+const float stop_distance_bus = 190.0f; // Distance pour commencer à s'arrêter au feu rouge
 const float max_speed_bus = 20;
 const float acceleration_bus = 1.3;
 const float width_bus = 40;
@@ -19,6 +19,7 @@ public:
         : shape_(sf::Vector2f(width_bus, height_bus)), direction_(direction), speed_(max_speed_bus), destination_(destination), acceleration_(acceleration_bus), in_crossing_(false) { // Réduire l'accélération
         shape_.setPosition(x, y);
         shape_.setFillColor(sf::Color::Magenta);
+        shape_.setOrigin(width_bus / 2, height_bus / 2);
     }
 
     void move() {
@@ -51,6 +52,10 @@ public:
 
     float getDistanceTo(const Bus& other) const {
         return std::sqrt(std::pow(other.getX() - getX(), 2) + std::pow(other.getY() - getY(), 2));
+    }
+
+    entry getDestination() {
+        return destination_;
     }
 };
 

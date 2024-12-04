@@ -18,14 +18,13 @@ const float l2 = 600;
 void generate_bikes(std::vector<Bike>& bikes) {
     if (bikes.size() >= 20)
         return;
-
-    int rdm = rand() % 100;
+    int rdm = rand() % 250;
     bool freeSpace = true;
     switch (rdm)
     {
     case 0:
         for (int i = 0; i < bikes.size(); i++) {
-            if (bikes.at(i).getX() == 411 && bikes.at(i).getY() < height_bike + safe_distance_bike)
+            if (bikes.at(i).getX() == 413 && bikes.at(i).getY() < height_bike + safe_distance_bike)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -43,13 +42,13 @@ void generate_bikes(std::vector<Bike>& bikes) {
                 dest = entry::right;
                 break;
             }
-            bikes.push_back(Bike(411, 0, sf::Vector2f(0, 1), dest));
+            bikes.push_back(Bike(413, 0, sf::Vector2f(0, 1), dest));
         }
         break;
     case 1:
         for (int i = 0; i < bikes.size(); i++)
         {
-            if (bikes.at(i).getX() == 574 && bikes.at(i).getY() > 1000 - height_bike - safe_distance_bike)
+            if (bikes.at(i).getX() == 587 && bikes.at(i).getY() > 1000 - height_bike - safe_distance_bike)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -67,13 +66,13 @@ void generate_bikes(std::vector<Bike>& bikes) {
                 dest = entry::right;
                 break;
             }
-            bikes.push_back(Bike(574, 1000, sf::Vector2f(0, -1), dest));
+            bikes.push_back(Bike(587, 1000, sf::Vector2f(0, -1), dest));
         } 
         break;
     case 2:
         for (int i = 0; i < bikes.size(); i++)
         {
-            if (bikes.at(i).getY() == 574 && bikes.at(i).getX() < height_bike + safe_distance_bike)
+            if (bikes.at(i).getY() == 587 && bikes.at(i).getX() < height_bike + safe_distance_bike)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -91,14 +90,14 @@ void generate_bikes(std::vector<Bike>& bikes) {
                 dest = entry::top;
                 break;
             }
-            bikes.push_back(Bike(0, 574, sf::Vector2f(1, 0), dest));
+            bikes.push_back(Bike(0, 587, sf::Vector2f(1, 0), dest));
             bikes.at(bikes.size() - 1).getShape().rotate(90);
         }
         break;
     case 3  :
         for (int i = 0; i < bikes.size(); i++)
         {
-            if (bikes.at(i).getY() == 411 && bikes.at(i).getX() > 1900 - height_bike - safe_distance_bike)
+            if (bikes.at(i).getY() == 413 && bikes.at(i).getX() > 1900 - height_bike - safe_distance_bike)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -116,7 +115,7 @@ void generate_bikes(std::vector<Bike>& bikes) {
                 dest = entry::left;
                 break;
             }
-            bikes.push_back(Bike(1900, 411, sf::Vector2f(-1, 0), dest));
+            bikes.push_back(Bike(1900, 413, sf::Vector2f(-1, 0), dest));
             bikes.at(bikes.size() - 1).getShape().rotate(90);
         }
         break;
@@ -136,34 +135,34 @@ void run_bikes(std::vector<Bike>& bikes, std::map<std::string, Crossing>& crossi
             bool stop_for_red = false;
 
             if (bike.getDirection().x > 0) { // Vélo se déplaçant horizontalement
-                if (bike.getX() > l1 - stop_distance_bike - crossingWidth && bike.getX() < l1 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (bike.getX() > l1 - stop_distance_bike - 2 * crossingWidth && bike.getX() < l1 - 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (bike.getDirection().x < 0) { // Vélo se déplaçant horizontalement
-                if (bike.getX() < l2 + stop_distance_bike + height_bike + crossingWidth && bike.getX() > l2 + crossingWidth + height_bike && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (bike.getX() < l2 + stop_distance_bike + 2 * crossingWidth && bike.getX() > l2 + 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (bike.getDirection().y > 0) { // Vélo se déplaçant verticalement
-                if (bike.getY() + height_bike > l1 - stop_distance_bike - crossingWidth && bike.getY() + height_bike < l1 - crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                if (bike.getY() > l1 - stop_distance_bike - 2 * crossingWidth && bike.getY() < l1 - 2 * crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (bike.getDirection().y < 0) { // Vélo se déplaçant verticalement
-                if (bike.getY() < l2 + stop_distance_bike + crossingWidth && bike.getY() > l2 + crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                if (bike.getY() < l2 + stop_distance_bike + 2 * crossingWidth && bike.getY() > l2 + 2 * crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
 
             // feu a droite solferino
             if (bike.getDirection().x > 0) { // Vélo se déplaçant horizontalement
-                if (bike.getX() > l2 + 550 - stop_distance_bike - crossingWidth && bike.getX() < l2 + 550 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (bike.getX() > l2 + 550 - stop_distance_bike - 2 * crossingWidth && bike.getX() < l2 + 550 - 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (bike.getDirection().x < 0) { // Vélo se déplaçant horizontalement
-                if (bike.getX() < l2 + 650 + stop_distance_bike + crossingWidth + height_bike && bike.getX() > l2 + 650 + crossingWidth + height_bike && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (bike.getX() < l2 + 650 + stop_distance_bike + 2 * crossingWidth && bike.getX() > l2 + 650 + 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }

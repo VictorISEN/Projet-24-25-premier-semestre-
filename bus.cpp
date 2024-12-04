@@ -17,16 +17,16 @@ const float l1 = 400;
 const float l2 = 600;
 
 void generate_buses(std::vector<Bus>& buses) {
-    if (buses.size() >= 6)
+    if (buses.size() >= 4)
         return;
 
-    int rdm = rand() % 100;
+    int rdm = rand() % 500;
     bool freeSpace = true;
     switch (rdm)
     {
     case 0:
         for (int i = 0; i < buses.size(); i++) {
-            if (buses.at(i).getX() == 428 && buses.at(i).getY() < height_bus + safe_distance_bus)
+            if (buses.at(i).getX() == 448 && buses.at(i).getY() < height_bus + safe_distance_bus)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -44,13 +44,13 @@ void generate_buses(std::vector<Bus>& buses) {
                 dest = entry::right;
                 break;
             }
-            buses.push_back(Bus(428, 0, sf::Vector2f(0, 1), dest));
+            buses.push_back(Bus(448, 0, sf::Vector2f(0, 1), dest));
         }
         break;
     case 1:
         for (int i = 0; i < buses.size(); i++)
         {
-            if (buses.at(i).getX() == 532 && buses.at(i).getY() > 1000 - height_bus - safe_distance_bus)
+            if (buses.at(i).getX() == 552 && buses.at(i).getY() > 1000 - height_bus - safe_distance_bus)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -68,13 +68,13 @@ void generate_buses(std::vector<Bus>& buses) {
                 dest = entry::right;
                 break;
             }
-            buses.push_back(Bus(532, 1000, sf::Vector2f(0, -1), dest));
+            buses.push_back(Bus(552, 1000, sf::Vector2f(0, -1), dest));
         }
         break;
     case 2:
         for (int i = 0; i < buses.size(); i++)
         {
-            if (buses.at(i).getY() == 532 && buses.at(i).getX() < height_bus + safe_distance_bus)
+            if (buses.at(i).getY() == 552 && buses.at(i).getX() < height_bus + safe_distance_bus)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -92,14 +92,14 @@ void generate_buses(std::vector<Bus>& buses) {
                 dest = entry::top;
                 break;
             }
-            buses.push_back(Bus(0, 532, sf::Vector2f(1, 0), dest));
+            buses.push_back(Bus(0, 552, sf::Vector2f(1, 0), dest));
             buses.at(buses.size() - 1).getShape().rotate(90);
         }
         break;
     case 3:
         for (int i = 0; i < buses.size(); i++)
         {
-            if (buses.at(i).getY() == 428 && buses.at(i).getX() > 1900 - height_bus - safe_distance_bus)
+            if (buses.at(i).getY() == 448 && buses.at(i).getX() > 1900 - height_bus - safe_distance_bus)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -117,7 +117,7 @@ void generate_buses(std::vector<Bus>& buses) {
                 dest = entry::left;
                 break;
             }
-            buses.push_back(Bus(1900, 428, sf::Vector2f(-1, 0), dest));
+            buses.push_back(Bus(1900, 448, sf::Vector2f(-1, 0), dest));
             buses.at(buses.size() - 1).getShape().rotate(90);
         }
         break;
@@ -137,34 +137,34 @@ void run_buses(std::vector<Bus>& buses, std::map<std::string, Crossing>& crossin
             bool stop_for_red = false;
 
             if (bus.getDirection().x > 0) { // Bus se déplaçant horizontalement
-                if (bus.getX() > l1 - stop_distance_bus - crossingWidth && bus.getX() < l1 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (bus.getX() > l1 - stop_distance_bus - 2 * crossingWidth && bus.getX() < l1 - 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (bus.getDirection().x < 0) { // Bus se déplaçant horizontalement
-                if (bus.getX() < l2 + stop_distance_bus + crossingWidth + height_bus && bus.getX() > l2 + crossingWidth + height_bus && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (bus.getX() < l2 + stop_distance_bus + 2 * crossingWidth && bus.getX() > l2 + 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (bus.getDirection().y > 0) { // Bus se déplaçant verticalement
-                if (bus.getY() + height_bus > l1 - stop_distance_bus - crossingWidth && bus.getY() + height_bus < l1 - crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                if (bus.getY() > l1 - stop_distance_bus - 2 * crossingWidth && bus.getY() < l1 -  2 * crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (bus.getDirection().y < 0) { // Bus se déplaçant verticalement
-                if (bus.getY() < l2 + stop_distance_bus + crossingWidth && bus.getY() > l2 + crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                if (bus.getY() < l2 + stop_distance_bus + 2 * crossingWidth && bus.getY() > l2 + 2 * crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
 
             // feu a droite solferino
                 if (bus.getDirection().x > 0) { // Bus se déplaçant horizontalement
-                    if (bus.getX() > l2 + 550 - stop_distance_bus - crossingWidth && bus.getX() < l2 + 550 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                    if (bus.getX() > l2 + 550 - stop_distance_bus - 2 * crossingWidth && bus.getX() < l2 + 550 - 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                         stop_for_red = true;
                     }
                 }
             if (bus.getDirection().x < 0) { // Bus se déplaçant horizontalement
-                if (bus.getX() < l2 + 650 + stop_distance_bus + crossingWidth + height_bus && bus.getX() > l2 + 650 + crossingWidth + height_bus && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (bus.getX() < l2 + 650 + stop_distance_bus + 2 * crossingWidth && bus.getX() > l2 + 650 + 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }

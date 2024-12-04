@@ -20,6 +20,7 @@ public:
         : shape_(sf::Vector2f(width_car, height_car)), direction_(direction), speed_(max_speed_car), destination_(destination), acceleration_(acceleration_car), in_crossing_(false) { // Réduire l'accélération
         shape_.setPosition(x, y);
         shape_.setFillColor(sf::Color::Yellow);
+        shape_.setOrigin(width_car / 2, height_car / 2);
     }
 
     void move() {
@@ -52,6 +53,10 @@ public:
 
     float getDistanceTo(const Car& other) const {
         return std::sqrt(std::pow(other.getX() - getX(), 2) + std::pow(other.getY() - getY(), 2));
+    }
+
+    entry getDestination() {
+        return destination_;
     }
 };
 

@@ -15,16 +15,16 @@
 const float l1 = 400;
 const float l2 = 600;
 void generate_cars(std::vector<Car>& cars) {
-    if (cars.size() >= 10)
+    if (cars.size() >= 15)
         return;
         
-    int rdm = rand() % 10;
+    int rdm = rand() % 100;
     bool freeSpace = true;
     switch (rdm)
     {
     case 0:
         for (int i = 0; i < cars.size(); i++) {
-            if (cars.at(i).getX() == 470 && cars.at(i).getY() < width_car + safe_distance_car)
+            if (cars.at(i).getX() == 485 && cars.at(i).getY() < width_car + safe_distance_car)
                 freeSpace = false;
 
         }
@@ -43,13 +43,13 @@ void generate_cars(std::vector<Car>& cars) {
                 dest = entry::right;
                 break;
             }
-            cars.push_back(Car(470, 0, sf::Vector2f(0, 1), dest));
+            cars.push_back(Car(485, 0, sf::Vector2f(0, 1), dest));
         }  
         break;
     case 1:
         for (int i = 0; i < cars.size(); i++)
         {
-            if (cars.at(i).getX() == 500 && cars.at(i).getY() > 1000 - width_car - safe_distance_car)
+            if (cars.at(i).getX() == 515 && cars.at(i).getY() > 1000 - width_car - safe_distance_car)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -67,13 +67,13 @@ void generate_cars(std::vector<Car>& cars) {
                 dest = entry::right;
                 break;
             }
-            cars.push_back(Car(500, 1000, sf::Vector2f(0, -1), dest));
+            cars.push_back(Car(515, 1000, sf::Vector2f(0, -1), dest));
         }
         break;
     case 2:
         for (int i = 0; i < cars.size(); i++)
         {
-            if (cars.at(i).getY() == 500 && cars.at(i).getX() < width_car + safe_distance_car)
+            if (cars.at(i).getY() == 515 && cars.at(i).getX() < width_car + safe_distance_car)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -91,14 +91,14 @@ void generate_cars(std::vector<Car>& cars) {
                 dest = entry::top;
                 break;
             }
-            cars.push_back(Car(0, 500, sf::Vector2f(1, 0), dest));
+            cars.push_back(Car(0, 515, sf::Vector2f(1, 0), dest));
             cars.at(cars.size() - 1).getShape().rotate(90);
         }
         break;
     case 3:
         for (int i = 0; i < cars.size(); i++)
         {
-            if (cars.at(i).getY() == 470 && cars.at(i).getX() > 1900 - width_car - safe_distance_car)
+            if (cars.at(i).getY() == 485 && cars.at(i).getX() > 1900 - width_car - safe_distance_car)
                 freeSpace = false;
         }
         if (freeSpace == true) {
@@ -116,7 +116,7 @@ void generate_cars(std::vector<Car>& cars) {
                 dest = entry::top;
                 break;
             }
-            cars.push_back(Car(1900, 470, sf::Vector2f(-1, 0), dest));
+            cars.push_back(Car(1900, 485, sf::Vector2f(-1, 0), dest));
             cars.at(cars.size() - 1).getShape().rotate(90);
         }
         break;
@@ -136,34 +136,34 @@ void run_cars(std::vector<Car>& cars, std::map<std::string, Crossing>& crossings
             bool stop_for_red = false;
 
             if (car.getDirection().x > 0) { // Voiture se déplaçant horizontalement
-                if (car.getX() > l1 - stop_distance_car - crossingWidth && car.getX() < l1 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (car.getX() > l1 - stop_distance_car - 2 * crossingWidth && car.getX() < l1 - 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (car.getDirection().x < 0) { // Voiture se déplaçant horizontalement
-                if (car.getX() < l2 + stop_distance_car + crossingWidth + height_car && car.getX() > l2 + crossingWidth + height_car && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (car.getX() < l2 + stop_distance_car + 2 * crossingWidth && car.getX() > l2 + 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (car.getDirection().y > 0) { // Voiture se déplaçant verticalement
-                if (car.getY() + height_car > l1 - stop_distance_car - crossingWidth && car.getY() + height_car < l1 - crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                if (car.getY() > l1 - stop_distance_car - 2 * crossingWidth && car.getY() < l1 - 2 * crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (car.getDirection().y < 0) { // Voiture se déplaçant verticalement
-                if (car.getY() < l2 + stop_distance_car + crossingWidth && car.getY() > l2 + crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                if (car.getY() < l2 + stop_distance_car + 2 * crossingWidth && car.getY() > l2 + 2 * crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
 
             // feu a droite solferino
             if (car.getDirection().x > 0) { // Voiture se déplaçant horizontalement
-                if (car.getX() > l2 + 550 - stop_distance_car - crossingWidth && car.getX() < l2 + 550 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (car.getX() > l2 + 550 - stop_distance_car - 2 * crossingWidth && car.getX() < l2 + 550 - 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (car.getDirection().x < 0) { // Voiture se déplaçant horizontalement
-                if (car.getX() < l2 + 650 + stop_distance_car + crossingWidth + height_car && car.getX() > l2 + 650 + crossingWidth + height_car && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (car.getX() < l2 + 650 + stop_distance_car + 2 * crossingWidth && car.getX() > l2 + 650 + 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
