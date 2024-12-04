@@ -43,11 +43,13 @@ public:
 	float getPosition_y();
 	sf::Vector2f getDirection();
 	sf::Vector2f getPosition();
+	void setDirection(const sf::Vector2f direction);
 	void setPosition_x(const float nb);
 	void setPosition_y(const float nb);
 	sf::RectangleShape getShape();
 	float distanceX(pedestrian& p);
 	float distanceY(pedestrian& p);
+	entry getDestination();
 };
 
 void run_pedestrians(std::vector<pedestrian>& pedestrians, std::map<std::string, Crossing> &crossings, std::stop_token stop_token);

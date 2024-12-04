@@ -123,7 +123,6 @@ int main()
         {
             window.draw(pedestrians.at(i).getShape());
         }
-
         for (int i = 0; i < cars.size(); i++)
         {
             window.draw(cars.at(i).getShape());
