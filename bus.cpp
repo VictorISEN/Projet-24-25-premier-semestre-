@@ -78,23 +78,35 @@ void run_buses(std::vector<Bus>& buses, std::map<std::string, Crossing>& crossin
 
             bool stop_for_red = false;
 
-            if (bus.getDirection().x > 0) { // Voiture se déplaçant horizontalement
-                if (bus.getX() > l1 - stop_distance_bus && bus.getX() < l1 && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+            if (bus.getDirection().x > 0) { // Bus se déplaçant horizontalement
+                if (bus.getX() > l1 - stop_distance_bus - crossingWidth && bus.getX() < l1 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
-            if (bus.getDirection().x < 0) { // Voiture se déplaçant horizontalement
-                if (bus.getX() < l2 + stop_distance_bus + height_bus && bus.getX() > l2 && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+            if (bus.getDirection().x < 0) { // Bus se déplaçant horizontalement
+                if (bus.getX() < l2 + stop_distance_bus + crossingWidth + height_bus && bus.getX() > l2 + crossingWidth + height_bus && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
-            if (bus.getDirection().y > 0) { // Voiture se déplaçant verticalement
-                if (bus.getY() > l1 - stop_distance_bus - height_bus && bus.getY() < l1 && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+            if (bus.getDirection().y > 0) { // Bus se déplaçant verticalement
+                if (bus.getY() + height_bus > l1 - stop_distance_bus - crossingWidth && bus.getY() + height_bus < l1 - crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
-            if (bus.getDirection().y < 0) { // Voiture se déplaçant verticalement
-                if (bus.getY() < l2 + stop_distance_bus && bus.getY() > l2 && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+            if (bus.getDirection().y < 0) { // Bus se déplaçant verticalement
+                if (bus.getY() < l2 + stop_distance_bus + crossingWidth && bus.getY() > l2 + crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                    stop_for_red = true;
+                }
+            }
+
+            // feu a droite solferino
+                if (bus.getDirection().x > 0) { // Bus se déplaçant horizontalement
+                    if (bus.getX() > l2 + 550 - stop_distance_bus - crossingWidth && bus.getX() < l2 + 550 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                        stop_for_red = true;
+                    }
+                }
+            if (bus.getDirection().x < 0) { // Bus se déplaçant horizontalement
+                if (bus.getX() < l2 + 650 + stop_distance_bus + crossingWidth + height_bus && bus.getX() > l2 + 650 + crossingWidth + height_bus && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }

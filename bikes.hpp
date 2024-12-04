@@ -1,6 +1,7 @@
-const float safe_distance_bike = 110.0f; // Distance minimale entre deux voitures
-const float stop_distance_bike = 70.0f; // Distance pour commencer à s'arrêter au feu rouge
+const float safe_distance_bike = 80.0f; // Distance minimale entre deux voitures
+const float stop_distance_bike = 40.0f; // Distance pour commencer à s'arrêter au feu rouge
 const float max_speed_bike = 10;
+const float acceleration_bikes = 2.0f;
 const float width_bike = 15;
 const float height_bike = 30;
 
@@ -15,7 +16,7 @@ private:
 
 public:
     Bike(float x, float y, sf::Vector2f direction, entry destination)
-        : shape_(sf::Vector2f(width_bike, height_bike)), direction_(direction), speed_(max_speed_bike), destination_(destination), acceleration_(max_speed_bike / 5.0f), in_crossing_(false) { // Réduire l'accélération
+        : shape_(sf::Vector2f(width_bike, height_bike)), direction_(direction), speed_(max_speed_bike), destination_(destination), acceleration_(acceleration_bikes), in_crossing_(false) { // Réduire l'accélération
         shape_.setPosition(x, y);
         shape_.setFillColor(sf::Color::Blue);
     }

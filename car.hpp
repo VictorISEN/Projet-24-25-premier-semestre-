@@ -1,8 +1,9 @@
-const float safe_distance_car = 180.0f; // Distance minimale entre deux voitures
-const float stop_distance_car = 150.0f; // Distance pour commencer à s'arrêter au feu rouge
+const float safe_distance_car = 210.0f; // Distance minimale entre deux voitures
+const float stop_distance_car = 120.0f; // Distance pour commencer à s'arrêter au feu rouge
 const float max_speed_car = 20;
 const float width_car = 30;
 const float height_car = 60;
+const float acceleration_car = 2.0f;
 const auto delay_speed = 0.02s;
 
 class Car {
@@ -16,7 +17,7 @@ private:
 
 public:
     Car(float x, float y, sf::Vector2f direction, entry destination)
-        : shape_(sf::Vector2f(width_car, height_car)), direction_(direction), speed_(max_speed_car), destination_(destination), acceleration_(max_speed_car / 10.0f), in_crossing_(false) { // Réduire l'accélération
+        : shape_(sf::Vector2f(width_car, height_car)), direction_(direction), speed_(max_speed_car), destination_(destination), acceleration_(acceleration_car), in_crossing_(false) { // Réduire l'accélération
         shape_.setPosition(x, y);
         shape_.setFillColor(sf::Color::Yellow);
     }

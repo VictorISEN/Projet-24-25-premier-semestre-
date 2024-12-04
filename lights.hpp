@@ -18,6 +18,8 @@ const auto delay_crossing = 1s;
 const float crossingLightRadius = 10;
 const float trafficLightRadius = 25;
 
+const float crossingWidth = 30;
+
 enum class Traffic_color
 {
     green = 0,

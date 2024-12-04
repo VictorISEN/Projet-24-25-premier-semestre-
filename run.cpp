@@ -110,6 +110,14 @@ int main()
         tmp.setRadius(traffic_lights["vauban"].getShape().getRadius());
         tmp.setFillColor(get_SFML_color(traffic_lights["vauban"].get_traffic_color()));
         window.draw(tmp);
+        tmp.setPosition(sf::Vector2f(l2 + 500 + traffic_lights["solferino"].getShape().getRadius(), l2 - 3 * traffic_lights["solferino"].getShape().getRadius()));
+        tmp.setRadius(traffic_lights["solferino"].getShape().getRadius());
+        tmp.setFillColor(get_SFML_color(traffic_lights["solferino"].get_traffic_color()));
+        window.draw(tmp);
+        tmp.setPosition(sf::Vector2f(l2 + 600 + traffic_lights["solferino"].getShape().getRadius(), l1 + traffic_lights["solferino"].getShape().getRadius()));
+        tmp.setRadius(traffic_lights["solferino"].getShape().getRadius());
+        tmp.setFillColor(get_SFML_color(traffic_lights["solferino"].get_traffic_color()));
+        window.draw(tmp);
 
         for (int i = 0; i < pedestrians.size(); i++)
         {

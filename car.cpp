@@ -78,22 +78,34 @@ void run_cars(std::vector<Car>& cars, std::map<std::string, Crossing>& crossings
             bool stop_for_red = false;
 
             if (car.getDirection().x > 0) { // Voiture se déplaçant horizontalement
-                if (car.getX() > l1 - stop_distance_car && car.getX() < l1 && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (car.getX() > l1 - stop_distance_car - crossingWidth && car.getX() < l1 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (car.getDirection().x < 0) { // Voiture se déplaçant horizontalement
-                if (car.getX() < l2 + stop_distance_car + height_car  && car.getX() > l2 && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                if (car.getX() < l2 + stop_distance_car + crossingWidth + height_car && car.getX() > l2 + crossingWidth + height_car && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (car.getDirection().y > 0) { // Voiture se déplaçant verticalement
-                if (car.getY() > l1 - stop_distance_car - height_car && car.getY() < l1 && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                if (car.getY() + height_car > l1 - stop_distance_car - crossingWidth && car.getY() + height_car < l1 - crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
             if (car.getDirection().y < 0) { // Voiture se déplaçant verticalement
-                if (car.getY() < l2 + stop_distance_car && car.getY() > l2 && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                if (car.getY() < l2 + stop_distance_car + crossingWidth && car.getY() > l2 + crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                    stop_for_red = true;
+                }
+            }
+
+            // feu a droite solferino
+            if (car.getDirection().x > 0) { // Voiture se déplaçant horizontalement
+                if (car.getX() > l2 + 550 - stop_distance_car - crossingWidth && car.getX() < l2 + 550 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                    stop_for_red = true;
+                }
+            }
+            if (car.getDirection().x < 0) { // Voiture se déplaçant horizontalement
+                if (car.getX() < l2 + 650 + stop_distance_car + crossingWidth + height_car && car.getX() > l2 + 650 + crossingWidth + height_car && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
@@ -128,7 +140,6 @@ void run_cars(std::vector<Car>& cars, std::map<std::string, Crossing>& crossings
 
             // Supprimer la voiture si elle sort de l'écran
             if (car.getX() > 1900 || car.getY() > 1000 || car.getX() < 0 || car.getY() < 0) {
-                std::cout << std::endl << std::endl << "gg" << std::endl << std::endl;
                 it = cars.erase(it);
             }
             else

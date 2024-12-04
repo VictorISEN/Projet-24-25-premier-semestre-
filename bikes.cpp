@@ -78,23 +78,35 @@ void run_bikes(std::vector<Bike>& bikes, std::map<std::string, Crossing>& crossi
 
             bool stop_for_red = false;
 
-            if (bike.getDirection().x > 0) { // Voiture se déplaçant horizontalement
-                if (bike.getX() > l1 - stop_distance_bike && bike.getX() < l1 && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+            if (bike.getDirection().x > 0) { // Vélo se déplaçant horizontalement
+                if (bike.getX() > l1 - stop_distance_bike - crossingWidth && bike.getX() < l1 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
-            if (bike.getDirection().x < 0) { // Voiture se déplaçant horizontalement
-                if (bike.getX() < l2 + stop_distance_bike + height_bike && bike.getX() > l2 && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+            if (bike.getDirection().x < 0) { // Vélo se déplaçant horizontalement
+                if (bike.getX() < l2 + stop_distance_bike + height_bike + crossingWidth && bike.getX() > l2 + crossingWidth + height_bike && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
-            if (bike.getDirection().y > 0) { // Voiture se déplaçant verticalement
-                if (bike.getY() > l1 - stop_distance_bike - height_bike && bike.getY() < l1 && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+            if (bike.getDirection().y > 0) { // Vélo se déplaçant verticalement
+                if (bike.getY() + height_bike > l1 - stop_distance_bike - crossingWidth && bike.getY() + height_bike < l1 - crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
-            if (bike.getDirection().y < 0) { // Voiture se déplaçant verticalement
-                if (bike.getY() < l2 + stop_distance_bike && bike.getY() > l2 && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+            if (bike.getDirection().y < 0) { // Vélo se déplaçant verticalement
+                if (bike.getY() < l2 + stop_distance_bike + crossingWidth && bike.getY() > l2 + crossingWidth && traffic_lights["vauban"].get_traffic_color() != Traffic_color::green) {
+                    stop_for_red = true;
+                }
+            }
+
+            // feu a droite solferino
+            if (bike.getDirection().x > 0) { // Vélo se déplaçant horizontalement
+                if (bike.getX() > l2 + 550 - stop_distance_bike - crossingWidth && bike.getX() < l2 + 550 - crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
+                    stop_for_red = true;
+                }
+            }
+            if (bike.getDirection().x < 0) { // Vélo se déplaçant horizontalement
+                if (bike.getX() < l2 + 650 + stop_distance_bike + crossingWidth + height_bike && bike.getX() > l2 + 650 + crossingWidth + height_bike && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
                     stop_for_red = true;
                 }
             }
