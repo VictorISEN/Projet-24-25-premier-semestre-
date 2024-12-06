@@ -128,6 +128,7 @@ void generate_buses(std::vector<Bus>& buses) {
 }
 
 void run_buses(std::vector<Bus>& buses, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::stop_token stop_token) {
+    srand(time(NULL));
     while (!stop_token.stop_requested())
     {
         generate_buses(buses);

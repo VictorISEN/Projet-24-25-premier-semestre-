@@ -330,6 +330,7 @@ void generatePedestrians(std::vector<pedestrian>& pedestrians) {
 
 void run_pedestrians(std::vector<pedestrian>& pedestrians, std::map<std::string, Crossing>& crossings, std::stop_token stop_token)
 {
+	srand(time(NULL));
 	while (!stop_token.stop_requested())
 	{
 		generatePedestrians(pedestrians);

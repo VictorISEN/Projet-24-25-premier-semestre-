@@ -15,7 +15,7 @@
 
 int main()
 {
-    srand(static_cast<unsigned>(time(nullptr)));
+    srand(time(NULL));
     std::stop_source stopping;
     std::map<std::string, Traffic_light> traffic_lights;
     std::map<std::string, Crossing> crossings;

@@ -126,6 +126,7 @@ void generate_bikes(std::vector<Bike>& bikes) {
 }
 
 void run_bikes(std::vector<Bike>& bikes, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::stop_token stop_token) {
+    srand(time(NULL));
     while (!stop_token.stop_requested())
     {
         generate_bikes(bikes);
