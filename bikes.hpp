@@ -57,6 +57,8 @@ public:
     entry getDestination() {
         return destination_;
     }
+
+    void turn();
 };
 
 void run_bikes(std::vector<Bike>& bikes, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::stop_token stop_token);

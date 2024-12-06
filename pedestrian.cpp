@@ -22,7 +22,7 @@ bool pedestrian::canCross(Crossing crossing) {
 	return(false);
 };
 
-sf::RectangleShape pedestrian::getShape() {
+sf::CircleShape pedestrian::getShape() {
 	return shape_;
 }
 
@@ -337,13 +337,13 @@ void run_pedestrians(std::vector<pedestrian>& pedestrians, std::map<std::string,
 		for (int i = 0; i < pedestrians.size(); i++)
 		{
 			//tourner
-			if ((pedestrians.at(i).getPosition_x() == l2 + pedestrianSize / 2 || pedestrians.at(i).getPosition_x() == l1 - 3 * pedestrianSize / 2 - 10) && pedestrians.at(i).getDestination() == entry::top)
+			if ((pedestrians.at(i).getPosition_x() == l2 + pedestrianSize || pedestrians.at(i).getPosition_x() == l1 - 3 * pedestrianSize - 10) && pedestrians.at(i).getDestination() == entry::top)
 				pedestrians.at(i).setDirection(sf::Vector2f(0, -1)); // vers le haut
-			if ((pedestrians.at(i).getPosition_x() == l1 - pedestrianSize / 2 || pedestrians.at(i).getPosition_x() == l2 + 3 * pedestrianSize / 2 + 10) && pedestrians.at(i).getDestination() == entry::bottom)
+			if ((pedestrians.at(i).getPosition_x() == l1 - pedestrianSize || pedestrians.at(i).getPosition_x() == l2 + 3 * pedestrianSize + 10) && pedestrians.at(i).getDestination() == entry::bottom)
 				pedestrians.at(i).setDirection(sf::Vector2f(0, 1)); // vers le bas
-			if ((pedestrians.at(i).getPosition_y() == l1 - pedestrianSize / 2 || pedestrians.at(i).getPosition_y() == l2 + 3 * pedestrianSize / 2 + 10) && pedestrians.at(i).getDestination() == entry::left)
+			if ((pedestrians.at(i).getPosition_y() == l1 - pedestrianSize || pedestrians.at(i).getPosition_y() == l2 + 3 * pedestrianSize + 10) && pedestrians.at(i).getDestination() == entry::left)
 				pedestrians.at(i).setDirection(sf::Vector2f(-1, 0));//gauche
-			if ((pedestrians.at(i).getPosition_y() == l2 + pedestrianSize / 2 || pedestrians.at(i).getPosition_y() == l1 - 3 * pedestrianSize / 2 - 10) && pedestrians.at(i).getDestination() == entry::right)
+			if ((pedestrians.at(i).getPosition_y() == l2 + pedestrianSize || pedestrians.at(i).getPosition_y() == l1 - 3 * pedestrianSize - 10) && pedestrians.at(i).getDestination() == entry::right)
 				pedestrians.at(i).setDirection(sf::Vector2f(1, 0));//droite
 
 			if (canMove(pedestrians, pedestrians.at(i)) == true) {

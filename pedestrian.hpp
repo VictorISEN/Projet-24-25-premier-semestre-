@@ -12,7 +12,7 @@
 using namespace std::chrono_literals;
 
 const float pedestrianSpeed = 1;
-const float pedestrianSize = 20;
+const float pedestrianSize = 10;
 const auto speed_delay = 0.01s;
 
 enum class entry
@@ -27,15 +27,15 @@ class pedestrian
 {
 private :
 	entry destination_;
-	sf::RectangleShape shape_;
+	sf::CircleShape shape_;
 	sf::Vector2f direction_;
 public:
 	explicit pedestrian(float posX, float posY, const entry destination, const sf::Vector2f direction) 
 		: destination_{ destination }, direction_{direction} {
 		shape_.setFillColor(sf::Color::White);
-		shape_.setSize(sf::Vector2f(pedestrianSize, pedestrianSize));
+		shape_.setRadius(pedestrianSize);
 		shape_.setPosition(posX, posY);
-		shape_.setOrigin(pedestrianSize / 2, pedestrianSize / 2);
+		shape_.setOrigin(pedestrianSize, pedestrianSize);
 	}
 	void move(std::map<std::string, Crossing> &crossings);
 	bool canCross(const Crossing crossing);
@@ -46,7 +46,7 @@ public:
 	void setDirection(const sf::Vector2f direction);
 	void setPosition_x(const float nb);
 	void setPosition_y(const float nb);
-	sf::RectangleShape getShape();
+	sf::CircleShape getShape();
 	float distanceX(pedestrian& p);
 	float distanceY(pedestrian& p);
 	entry getDestination();

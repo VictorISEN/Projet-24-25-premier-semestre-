@@ -10,6 +10,7 @@ private:
     sf::RectangleShape shape_;
     sf::Vector2f direction_;
     entry destination_;
+    entry origin_;
     float speed_; // Vitesse actuelle
     float acceleration_; // Accélération
     bool in_crossing_;
@@ -57,6 +58,8 @@ public:
     entry getDestination() {
         return destination_;
     }
+
+    void turn();
 };
 
 void run_buses(std::vector<Bus>& buses, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::stop_token stop_token);

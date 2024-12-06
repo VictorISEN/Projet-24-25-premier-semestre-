@@ -125,6 +125,31 @@ void generate_bikes(std::vector<Bike>& bikes) {
     return;
 }
 
+void Bike::turn() {
+    if (this->getX() >= l2 || this->getX() <= l1 || this->getY() >= l2 || this->getY() <= l1)
+        return;
+    if (destination_ == entry::right && direction_ != sf::Vector2f(1, 0) && shape_.getPosition().y >= 577 && shape_.getPosition().y <= 597) {
+        direction_ = sf::Vector2f(1, 0);
+        shape_.setPosition(shape_.getPosition().x, 587);
+        shape_.rotate(90);
+    }
+    if (destination_ == entry::left && direction_ != sf::Vector2f(-1, 0) && shape_.getPosition().y >= 403 && shape_.getPosition().y <= 423) {
+        direction_ = sf::Vector2f(-1, 0);
+        shape_.setPosition(shape_.getPosition().x, 413);
+        shape_.rotate(90);
+    }
+    if (destination_ == entry::top && direction_ != sf::Vector2f(0, -1) && shape_.getPosition().x >= 577 && shape_.getPosition().x <= 597) {
+        direction_ = sf::Vector2f(0, -1);
+        shape_.setPosition(587, shape_.getPosition().y);
+        shape_.rotate(90);
+    }
+    if (destination_ == entry::bottom && direction_ != sf::Vector2f(0, 1) && shape_.getPosition().x >= 403 && shape_.getPosition().x <= 423) {
+        direction_ = sf::Vector2f(0, 1);
+        shape_.setPosition(413, shape_.getPosition().y);
+        shape_.rotate(90);
+    }
+}
+
 void run_bikes(std::vector<Bike>& bikes, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::stop_token stop_token) {
     srand(time(NULL));
     while (!stop_token.stop_requested())
@@ -134,6 +159,8 @@ void run_bikes(std::vector<Bike>& bikes, std::map<std::string, Crossing>& crossi
             Bike& bike = *it;
 
             bool stop_for_red = false;
+
+            bike.turn();
 
             if (bike.getDirection().x > 0) { // Vélo se déplaçant horizontalement
                 if (bike.getX() > l1 - stop_distance_bike - 2 * crossingWidth && bike.getX() < l1 - 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {

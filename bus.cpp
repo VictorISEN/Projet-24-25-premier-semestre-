@@ -127,6 +127,31 @@ void generate_buses(std::vector<Bus>& buses) {
     return;
 }
 
+void Bus::turn() {
+    if (this->getX() >= l2 || this->getX() <= l1 || this->getY() >= l2 || this->getY() <= l1)
+        return;
+    if (destination_ == entry::right && direction_ != sf::Vector2f(1, 0) && shape_.getPosition().y >= 542 && shape_.getPosition().y <= 562) {
+        direction_ = sf::Vector2f(1, 0);
+        shape_.setPosition(shape_.getPosition().x, 552);
+        shape_.rotate(90);
+    }
+    if (destination_ == entry::left && direction_ != sf::Vector2f(-1, 0) && shape_.getPosition().y >= 438 && shape_.getPosition().y <= 458) {
+        direction_ = sf::Vector2f(-1, 0);
+        shape_.setPosition(shape_.getPosition().x, 448);
+        shape_.rotate(90);
+    }
+    if (destination_ == entry::top && direction_ != sf::Vector2f(0, -1) && shape_.getPosition().x >= 542 && shape_.getPosition().x <= 562) {
+        direction_ = sf::Vector2f(0, -1);
+        shape_.setPosition(552, shape_.getPosition().y);
+        shape_.rotate(90);
+    }
+    if (destination_ == entry::bottom && direction_ != sf::Vector2f(0, 1) && shape_.getPosition().x >= 438 && shape_.getPosition().x <= 458) {
+        direction_ = sf::Vector2f(0, 1);
+        shape_.setPosition(448, shape_.getPosition().y);
+        shape_.rotate(90);
+    }
+}
+
 void run_buses(std::vector<Bus>& buses, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::stop_token stop_token) {
     srand(time(NULL));
     while (!stop_token.stop_requested())
@@ -136,6 +161,8 @@ void run_buses(std::vector<Bus>& buses, std::map<std::string, Crossing>& crossin
             Bus& bus = *it;
 
             bool stop_for_red = false;
+
+            bus.turn();
 
             if (bus.getDirection().x > 0) { // Bus se déplaçant horizontalement
                 if (bus.getX() > l1 - stop_distance_bus - 2 * crossingWidth && bus.getX() < l1 - 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
