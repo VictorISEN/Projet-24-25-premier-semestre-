@@ -45,13 +45,13 @@ int main()
         std::ref(pedestrians), std::ref(crossings), stopping.get_token());
 
     std::jthread thread_cars(run_cars,
-        std::ref(cars), std::ref(crossings), std::ref(traffic_lights), stopping.get_token());
+        std::ref(cars), std::ref(crossings), std::ref(traffic_lights), std::ref(buses), std::ref(bikes), std::ref(pedestrians), stopping.get_token());
 
     std::jthread thread_buses(run_buses,
-        std::ref(buses), std::ref(crossings), std::ref(traffic_lights), stopping.get_token());
+        std::ref(buses), std::ref(crossings), std::ref(traffic_lights)/*, std::ref(bikes), std::ref(cars), std::ref(pedestrians)*/, stopping.get_token());
 
     std::jthread thread_bikes(run_bikes,
-        std::ref(bikes), std::ref(crossings), std::ref(traffic_lights), stopping.get_token());
+        std::ref(bikes), std::ref(crossings), std::ref(traffic_lights)/*, std::ref(buses), std::ref(cars), std::ref(pedestrians)*/, stopping.get_token());
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
 

@@ -6,11 +6,12 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <map>
-#include "lights.hpp"
 #include "pedestrian.hpp"
+#include "lights.hpp"
 #include <cstdlib>
 #include <ctime>
 #include "car.hpp"
+
 
 const float l1 = 400;
 const float l2 = 600;
@@ -151,17 +152,135 @@ void Car::turn() {
     }
 }
 
-void run_cars(std::vector<Car>& cars, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::stop_token stop_token) {
+bool Car::canTurn(bool CTop, bool CBottom, bool CLeft, bool CRight, std::vector<Bus>& buses, std::vector<Bike>& bikes, std::vector<Car>& cars) {
+    if (can_turn_ == true)
+        return true;
+    if ((destination_ == entry::top && direction_ == sf::Vector2f(0, -1)) ||
+        (destination_ == entry::bottom && direction_ == sf::Vector2f(0, 1)) ||
+        (destination_ == entry::left && direction_ == sf::Vector2f(-1, 0)) ||
+        (destination_ == entry::right && direction_ == sf::Vector2f(1, 0)))
+        return true;
+
+    // on verifife que les bus n'empechent pas de tourner
+    for (int i = 0; i < buses.size(); i++)
+    {
+        // si il tourne vers le haut
+        if (this->getDestination() == entry::top && this->getDirection().x != 0) {
+            if ((buses.at(i).getDirection().x == -1 && buses.at(i).getX() >= 515 - 40 && buses.at(i).getX() <= 515 + safe_distance_bus + 100 && buses.at(i).getDestination() != entry::top) || CTop == false)
+                return false;
+        }
+        // si il tourne vers le bas
+        if (this->getDestination() == entry::bottom && this->getDirection().x != 0) {
+            if ((buses.at(i).getDirection().x == 1 && buses.at(i).getX() >= 485 - safe_distance_bus - 100 && buses.at(i).getX() <= 458 + 40 && buses.at(i).getDestination() != entry::bottom) || CBottom == false)
+                return false;
+        }
+        // si il tourne vers la gauche
+        if (this->getDestination() == entry::left && this->getDirection().y != 0) {
+            if ((buses.at(i).getDirection().y == 1 && buses.at(i).getY() >= 485 - safe_distance_bus - 100 && buses.at(i).getY() <= 458 + 40 && buses.at(i).getDestination() != entry::left) || CLeft == false)
+                return false;
+        }
+        // si il tourne vers la droite
+        if (this->getDestination() == entry::right && this->getDirection().y != 0) {
+            if ((buses.at(i).getDirection().y == -1 && buses.at(i).getY() >= 515 - 40 && buses.at(i).getY() <= 515 + safe_distance_bus + 100 && buses.at(i).getDestination() != entry::right) || CRight == false)
+                return false;
+        }
+    }
+    
+    //on verifie que les velos n empechent pas de tourner
+    for (int i = 0; i < bikes.size(); i++)
+    {
+        // si il tourne vers le haut
+        if (this->getDestination() == entry::top && this->getDirection().x != 0) {
+            if ((bikes.at(i).getDirection().x == -1 && bikes.at(i).getDestination() != entry::top && bikes.at(i).getX() >= 515 - 20 && bikes.at(i).getX() <= 515 + safe_distance_bike + 50) || CTop == false)
+                return false;
+        }
+        // si il tourne vers le bas
+        if (this->getDestination() == entry::bottom && this->getDirection().x != 0) {
+            if ((bikes.at(i).getDirection().x == 1 && bikes.at(i).getDestination() != entry::bottom && bikes.at(i).getX() >= 485 - safe_distance_bike - 50 && bikes.at(i).getX() <= 458 + 20) || CBottom == false)
+                return false;
+        }
+        // si il tourne vers la gauche
+        if (this->getDestination() == entry::left && this->getDirection().y != 0) {
+            if ((bikes.at(i).getDirection().y == 1 && bikes.at(i).getDestination() != entry::left && bikes.at(i).getY() >= 485 - safe_distance_bike - 50 && bikes.at(i).getY() <= 458 + 20) || CLeft == false)
+                return false;
+        }
+        // si il tourne vers la droite
+        if (this->getDestination() == entry::right && this->getDirection().y != 0) {
+            if ((bikes.at(i).getDirection().y == -1 && bikes.at(i).getDestination() != entry::right && bikes.at(i).getY() >= 515 - 20 && bikes.at(i).getY() <= 515 + safe_distance_bike + 50) || CRight == false)
+                return false;
+        }
+    }
+
+    for (int i = 0; i < cars.size(); i++)
+    {
+        if (cars.at(i).getShape().getPosition() != shape_.getPosition()) {
+            if (this->getDestination() == entry::top && this->getDirection().x == 1) {
+                if ((cars.at(i).getDirection().x == -1 && cars.at(i).getDestination() != entry::top && cars.at(i).getDestination() != entry::bottom && cars.at(i).getX() >= 515 - 40 && cars.at(i).getX() <= 515 + safe_distance_car + 50) || CTop == false)
+                    return false;
+            }
+            // si il tourne vers le bas
+            if (this->getDestination() == entry::bottom && this->getDirection().x == -1) {
+                if ((cars.at(i).getDirection().x == 1 && cars.at(i).getDestination() != entry::bottom && cars.at(i).getX() >= 485 - safe_distance_car - 50 && cars.at(i).getX() <= 458 + 40) || CBottom == false)
+                    return false;
+            }
+            // si il tourne vers la gauche
+            if (this->getDestination() == entry::left && this->getDirection().y == 1) {
+                if ((cars.at(i).getDirection().y == 1 && cars.at(i).getDestination() != entry::left && cars.at(i).getDestination() != entry::right && cars.at(i).getY() >= 485 - safe_distance_car - 50 && cars.at(i).getY() <= 458 + 40) || CLeft == false)
+                    return false;
+            }
+            // si il tourne vers la droite
+            if (this->getDestination() == entry::right && this->getDirection().y == -1) {
+                if ((cars.at(i).getDirection().y == -1 && cars.at(i).getDestination() != entry::right && cars.at(i).getY() >= 515 - 40 && cars.at(i).getY() <= 515 + safe_distance_car + 50) || CRight == false)
+                    return false;
+            }
+        }
+    }
+    return true;
+}
+
+void run_cars(std::vector<Car>& cars, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::vector<Bus>& buses, std::vector<Bike>& bikes, std::vector<pedestrian>& pedestrians, std::stop_token stop_token) {
     srand(time(NULL));
     while (!stop_token.stop_requested())
     {
         generate_cars(cars);
+
+        // on regarde si le spassages piétons sont libres
+        bool CTop = true, CBottom = true, CLeft = true, CRight = true;
+        for (int i = 0; i < pedestrians.size(); i++)
+        {
+            if ((pedestrians.at(i).getDestination() == entry::top && pedestrians.at(i).getPosition().y > l1 && pedestrians.at(i).getPosition().y <= l2 + 20) ||
+                (pedestrians.at(i).getDestination() == entry::bottom && pedestrians.at(i).getPosition().y < l2 && pedestrians.at(i).getPosition().y >= l1 - 20)) {
+                if (pedestrians.at(i).getPosition().x > l1 - 20 && pedestrians.at(i).getPosition().x <= l1)
+                    CLeft = false;
+                if (pedestrians.at(i).getPosition().x >= l2 && pedestrians.at(i).getPosition().x < l2 + 20)
+                    CRight = false;
+            }
+            if ((pedestrians.at(i).getDestination() == entry::left && pedestrians.at(i).getPosition().y > l1 && pedestrians.at(i).getPosition().y <= l2 + 20) ||
+                (pedestrians.at(i).getDestination() == entry::right && pedestrians.at(i).getPosition().y < l2 && pedestrians.at(i).getPosition().y >= l1 - 20)) {
+                if (pedestrians.at(i).getPosition().y > l1 - 20 && pedestrians.at(i).getPosition().y <= l1)
+                    CTop = false;
+                if (pedestrians.at(i).getPosition().y >= l2 && pedestrians.at(i).getPosition().y < l2 + 20)
+                    CBottom = false;
+            }
+        }
+
         for (auto it = cars.begin(); it != cars.end();) {
             Car& car = *it;
 
             bool stop_for_red = false;
+            bool can_turn = true;
 
             car.turn();
+
+            if ((car.getDestination() == entry::top && car.getX() >= 515 - safe_distance_car && car.getX() <= 515 + safe_distance_car) ||
+                (car.getDestination() == entry::bottom && car.getX() >= 485 - safe_distance_car && car.getX() <= 485 + safe_distance_car) ||
+                (car.getDestination() == entry::left && car.getY() >= 485 - safe_distance_car && car.getY() <= 485 + safe_distance_car) ||
+                (car.getDestination() == entry::right && car.getY() >= 515 - safe_distance_car && car.getY() <= 515 + safe_distance_car)) {
+                if (car.getCanTurn() == false) {
+                    can_turn = car.canTurn(CTop, CBottom, CLeft, CRight, buses, bikes, cars);
+                    car.setCanTurn(can_turn);
+                }
+            }
 
             if (car.getDirection().x > 0) { // Voiture se déplaçant horizontalement
                 if (car.getX() > l1 - stop_distance_car - 2 * crossingWidth && car.getX() < l1 - 2 * crossingWidth && traffic_lights["solferino"].get_traffic_color() != Traffic_color::green) {
@@ -214,7 +333,7 @@ void run_cars(std::vector<Car>& cars, std::map<std::string, Crossing>& crossings
                         }
                     }
                 }
-                if (!too_close) {
+                if (!too_close && can_turn) {
                     car.accelerate();
                 }
                 else {
