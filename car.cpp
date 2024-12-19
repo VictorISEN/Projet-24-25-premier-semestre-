@@ -144,8 +144,10 @@ void Car::turn() {
 }
 
 bool Car::canTurn(bool CTop, bool CBottom, bool CLeft, bool CRight, std::vector<Bus>& buses, std::vector<Bike>& bikes, std::vector<Car>& cars) {
-    if (can_turn_ == true)
+    if (can_turn_ == true) // si a un moment il avait une possibilité de passer, il l as prise donc il fini de toute facon son virage
         return true;
+
+    // on ignore si il continur=e totu droit
     if ((destination_ == entry::top && direction_ == sf::Vector2f(0, -1)) ||
         (destination_ == entry::bottom && direction_ == sf::Vector2f(0, 1)) ||
         (destination_ == entry::left && direction_ == sf::Vector2f(-1, 0)) ||
@@ -155,29 +157,36 @@ bool Car::canTurn(bool CTop, bool CBottom, bool CLeft, bool CRight, std::vector<
     // on verifife que les bus n'empechent pas de tourner
     for (int i = 0; i < buses.size(); i++)
     {
+        // a chauqes test, on ne prends pas en compte si le bus tourne dans la meme direction que la voiture (leurs trajectoire ne se croisent pas)
         // si il tourne vers le haut
         if (this->getDestination() == entry::top && this->getDirection().x != 0) {
+            // si un bus arrive de la droite on verifie qu il soit a une distance minimum de l intersection
+            // si ce n est pas le cas (donc que la condition est vraie), la voiture ne peut pas tourner
+            // 515 et 485 est le point ou il tourne et 150 ou 40 sont des distance de securité a peut etre recalibrer
             if ((buses.at(i).getDirection().x == -1 && buses.at(i).getX() >= 515 - 40 && buses.at(i).getX() <= 515 + safe_distance_bus + 150 && buses.at(i).getDestination() != entry::top && buses.at(i).getDestination() != entry::bottom) || CTop == false)
                 return false;
         }
         // si il tourne vers le bas
         if (this->getDestination() == entry::bottom && this->getDirection().x != 0) {
+            // si un bus arrive de la gauche on verifie qu il soit a une distance minimum de l intersection
             if ((buses.at(i).getDirection().x == 1 && buses.at(i).getX() >= 485 - safe_distance_bus - 150 && buses.at(i).getX() <= 458 + 40 && buses.at(i).getDestination() != entry::bottom && buses.at(i).getDestination() != entry::top) || CBottom == false)
                 return false;
         }
         // si il tourne vers la gauche
         if (this->getDestination() == entry::left && this->getDirection().y != 0) {
+            // si un bus arrive du haut on verifie qu il soit a une distance minimum de l intersection
             if ((buses.at(i).getDirection().y == 1 && buses.at(i).getY() >= 485 - safe_distance_bus - 150 && buses.at(i).getY() <= 458 + 40 && buses.at(i).getDestination() != entry::left && buses.at(i).getDestination() != entry::right) || CLeft == false)
                 return false;
         }
         // si il tourne vers la droite
         if (this->getDestination() == entry::right && this->getDirection().y != 0) {
+            // si un bus arrive du bas on verifie qu il soit a une distance minimum de l intersection
             if ((buses.at(i).getDirection().y == -1 && buses.at(i).getY() >= 515 - 40 && buses.at(i).getY() <= 515 + safe_distance_bus + 150 && buses.at(i).getDestination() != entry::right && buses.at(i).getDestination() != entry::left) || CRight == false)
                 return false;
         }
     }
     
-    //on verifie que les velos n empechent pas de tourner
+    //on verifie que les velos n empechent pas de tourner, fonctionne comme pour les bus
     for (int i = 0; i < bikes.size(); i++)
     {
         // si il tourne vers le haut
@@ -202,6 +211,8 @@ bool Car::canTurn(bool CTop, bool CBottom, bool CLeft, bool CRight, std::vector<
         }
     }
 
+    // presque comme pour les autre mais on verifie uniquement si la voiture actuelle veut tourner vers sa gauche
+    // et on a un systeme de priorite pour eviter que 2 voitures ne se retrouvent bloquées face a face car les 2 doivent laisser passer l autre
     for (int i = 0; i < cars.size(); i++)
     {
         if (cars.at(i).getShape().getPosition() != shape_.getPosition()) {
@@ -239,6 +250,7 @@ void run_cars(std::vector<Car>& cars, std::map<std::string, Crossing>& crossings
         bool CTop = true, CBottom = true, CLeft = true, CRight = true;
         for (int i = 0; i < pedestrians.size(); i++)
         {
+            // on verifie pour chauqe pieton qu il n est pas proche d un passage qu il va traverser
             if ((pedestrians.at(i).getDestination() == entry::top && pedestrians.at(i).getPosition().y > l1 && pedestrians.at(i).getPosition().y <= l2 + 20) ||
                 (pedestrians.at(i).getDestination() == entry::bottom && pedestrians.at(i).getPosition().y < l2 && pedestrians.at(i).getPosition().y >= l1 - 20)) {
                 if (pedestrians.at(i).getPosition().x > l1 - 20 && pedestrians.at(i).getPosition().x <= l1)
@@ -263,12 +275,16 @@ void run_cars(std::vector<Car>& cars, std::map<std::string, Crossing>& crossings
 
             car.turn();
 
+            // on ne regarde si il peut tourner que si il est assez proche de la ou il tourne
             if ((car.getDestination() == entry::top && car.getX() >= 515 - safe_distance_car && car.getX() <= 515 + safe_distance_car) ||
                 (car.getDestination() == entry::bottom && car.getX() >= 485 - safe_distance_car && car.getX() <= 485 + safe_distance_car) ||
                 (car.getDestination() == entry::left && car.getY() >= 485 - safe_distance_car && car.getY() <= 485 + safe_distance_car) ||
                 (car.getDestination() == entry::right && car.getY() >= 515 - safe_distance_car && car.getY() <= 515 + safe_distance_car)) {
                 if (car.getCanTurn() == false) {
+                    // canTurn(...); verifie si il peut tourner, on fait les test a chaque deplacement
+                    // jusqu a ce que il ait le droit (tant que c est pas le cas il freine)
                     can_turn = car.canTurn(CTop, CBottom, CLeft, CRight, buses, bikes, cars);
+                    // le vehicule posede une propriete can_turn_
                     car.setCanTurn(can_turn);
                 }
             }

@@ -149,6 +149,8 @@ bool Bike::canTurn(bool CTop, bool CBottom, bool CLeft, bool CRight, std::vector
         (destination_ == entry::left && direction_ == sf::Vector2f(-1, 0)) ||
         (destination_ == entry::right && direction_ == sf::Vector2f(1, 0)))
         return true;
+    // comme pour les bus mais la si un velo tourne sur sa droite il ne doit verifier aucun vehicule
+    // qet si il tourne a sa aguche il doit verifier les 2 sens de voitures et bus et le sens opposé de velos
 
     // on verifife que les voitures n'empechent pas de tourner (a guache)
     for (int i = 0; i < cars.size(); i++)
