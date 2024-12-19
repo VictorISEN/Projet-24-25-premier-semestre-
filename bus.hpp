@@ -1,4 +1,16 @@
 #pragma once
+#include <iostream> // std::cout
+#include <thread>   // std::thread, std::this_thread::yield
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <string>
+#include <map>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include "pedestrian.hpp"
+#include "lights.hpp"
+
 const float safe_distance_bus = 350.0f; // Distance minimale entre deux voitures
 const float stop_distance_bus = 190.0f; // Distance pour commencer à s'arrêter au feu rouge
 const float max_speed_bus = 20;
@@ -6,19 +18,22 @@ const float acceleration_bus = 1.3;
 const float width_bus = 40;
 const float height_bus = 130;
 
+class Car;
+class Bike;
+
 class Bus {
 private:
     sf::RectangleShape shape_;
     sf::Vector2f direction_;
     entry destination_;
-    entry origin_;
     float speed_; // Vitesse actuelle
     float acceleration_; // Accélération
     bool in_crossing_;
+    bool can_turn_;
 
 public:
     Bus(float x, float y, sf::Vector2f direction, entry destination)
-        : shape_(sf::Vector2f(width_bus, height_bus)), direction_(direction), speed_(max_speed_bus), destination_(destination), acceleration_(acceleration_bus), in_crossing_(false) { // Réduire l'accélération
+        : shape_(sf::Vector2f(width_bus, height_bus)), direction_(direction), speed_(max_speed_bus), destination_(destination), acceleration_(acceleration_bus), in_crossing_(false), can_turn_(false) { // Réduire l'accélération
         shape_.setPosition(x, y);
         if (destination_ == entry::top)
             shape_.setFillColor(sf::Color::Yellow);
@@ -67,9 +82,19 @@ public:
         return destination_;
     }
 
+    bool getCanTurn() {
+        return can_turn_;
+    }
+
+    void setCanTurn(bool canturn) {
+        can_turn_ = canturn;
+    }
+
     void turn();
+
+    bool canTurn(bool CTop, bool CBottom, bool CLeft, bool CRight, std::vector<Bus>& buses, std::vector<Bike>& bikes, std::vector<Car>& cars);
 };
 
-void run_buses(std::vector<Bus>& buses, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::stop_token stop_token);
+void run_buses(std::vector<Bus>& buses, std::map<std::string, Crossing>& crossings, std::map<std::string, Traffic_light>& traffic_lights, std::vector<Car>& cars, std::vector<Bike>& bikes, std::vector<pedestrian>& pedestrians, std::stop_token stop_token);
 
 void generate_buses(std::vector<Bus>& buses);

@@ -123,7 +123,7 @@ bool canMove(std::vector<pedestrian>& pedestrians, pedestrian& p) {
 }
 
 void generatePedestrians(std::vector<pedestrian>& pedestrians) {
-	if (pedestrians.size() >= 20)
+	if (pedestrians.size() >= 10)
 		return;
 	int rdm = rand() % 1000;
 	bool freeSpace = true;

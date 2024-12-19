@@ -1,4 +1,15 @@
 #pragma once
+#include <iostream> // std::cout
+#include <thread>   // std::thread, std::this_thread::yield
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <string>
+#include <map>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+#include "pedestrian.hpp"
+#include "lights.hpp"
 #include "bus.hpp"
 #include "bikes.hpp"
 
@@ -8,7 +19,7 @@ const float max_speed_car = 20;
 const float width_car = 30;
 const float height_car = 60;
 const float acceleration_car = 2.0f;
-const auto delay_speed = 0.02s;
+const auto delay_speed = 0.04s;
 
 class Car {
 private:
@@ -22,7 +33,7 @@ private:
 
 public:
     Car(float x, float y, sf::Vector2f direction, entry destination)
-        : shape_(sf::Vector2f(width_car, height_car)), direction_(direction), speed_(max_speed_car), destination_(destination), acceleration_(acceleration_car), in_crossing_(false), can_turn_{false} { // Réduire l'accélération
+        : shape_(sf::Vector2f(width_car, height_car)), direction_(direction), speed_(max_speed_car), destination_(destination), acceleration_(acceleration_car), in_crossing_(false), can_turn_(false) { // Réduire l'accélération
         shape_.setPosition(x, y);
         if(destination_ == entry::top)
             shape_.setFillColor(sf::Color::Yellow);

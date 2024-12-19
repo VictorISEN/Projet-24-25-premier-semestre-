@@ -6,12 +6,13 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <ctime>
 #include "lights.hpp"
 #include "pedestrian.hpp"
 #include "car.hpp"
 #include "bus.hpp"
 #include "bikes.hpp"
-#include <ctime>
+
 
 int main()
 {
@@ -48,10 +49,10 @@ int main()
         std::ref(cars), std::ref(crossings), std::ref(traffic_lights), std::ref(buses), std::ref(bikes), std::ref(pedestrians), stopping.get_token());
 
     std::jthread thread_buses(run_buses,
-        std::ref(buses), std::ref(crossings), std::ref(traffic_lights)/*, std::ref(bikes), std::ref(cars), std::ref(pedestrians)*/, stopping.get_token());
+        std::ref(buses), std::ref(crossings), std::ref(traffic_lights), std::ref(cars), std::ref(bikes), std::ref(pedestrians), stopping.get_token());
 
     std::jthread thread_bikes(run_bikes,
-        std::ref(bikes), std::ref(crossings), std::ref(traffic_lights)/*, std::ref(buses), std::ref(cars), std::ref(pedestrians)*/, stopping.get_token());
+        std::ref(bikes), std::ref(crossings), std::ref(traffic_lights), std::ref(buses), std::ref(cars), std::ref(pedestrians), stopping.get_token());
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
 

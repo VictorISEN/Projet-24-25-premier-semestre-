@@ -1,15 +1,6 @@
 #pragma once
 // condition_variable::wait(with predicate)
-#include <iostream> // std::cout
-#include <thread>   // std::thread, std::this_thread::yield
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
-#include <string>
-#include <map>
-#include "pedestrian.hpp"
-#include "lights.hpp"
-#include <cstdlib>
-#include <ctime>
+
 #include "car.hpp"
 
 
@@ -166,22 +157,22 @@ bool Car::canTurn(bool CTop, bool CBottom, bool CLeft, bool CRight, std::vector<
     {
         // si il tourne vers le haut
         if (this->getDestination() == entry::top && this->getDirection().x != 0) {
-            if ((buses.at(i).getDirection().x == -1 && buses.at(i).getX() >= 515 - 40 && buses.at(i).getX() <= 515 + safe_distance_bus + 100 && buses.at(i).getDestination() != entry::top) || CTop == false)
+            if ((buses.at(i).getDirection().x == -1 && buses.at(i).getX() >= 515 - 40 && buses.at(i).getX() <= 515 + safe_distance_bus + 150 && buses.at(i).getDestination() != entry::top && buses.at(i).getDestination() != entry::bottom) || CTop == false)
                 return false;
         }
         // si il tourne vers le bas
         if (this->getDestination() == entry::bottom && this->getDirection().x != 0) {
-            if ((buses.at(i).getDirection().x == 1 && buses.at(i).getX() >= 485 - safe_distance_bus - 100 && buses.at(i).getX() <= 458 + 40 && buses.at(i).getDestination() != entry::bottom) || CBottom == false)
+            if ((buses.at(i).getDirection().x == 1 && buses.at(i).getX() >= 485 - safe_distance_bus - 150 && buses.at(i).getX() <= 458 + 40 && buses.at(i).getDestination() != entry::bottom && buses.at(i).getDestination() != entry::top) || CBottom == false)
                 return false;
         }
         // si il tourne vers la gauche
         if (this->getDestination() == entry::left && this->getDirection().y != 0) {
-            if ((buses.at(i).getDirection().y == 1 && buses.at(i).getY() >= 485 - safe_distance_bus - 100 && buses.at(i).getY() <= 458 + 40 && buses.at(i).getDestination() != entry::left) || CLeft == false)
+            if ((buses.at(i).getDirection().y == 1 && buses.at(i).getY() >= 485 - safe_distance_bus - 150 && buses.at(i).getY() <= 458 + 40 && buses.at(i).getDestination() != entry::left && buses.at(i).getDestination() != entry::right) || CLeft == false)
                 return false;
         }
         // si il tourne vers la droite
         if (this->getDestination() == entry::right && this->getDirection().y != 0) {
-            if ((buses.at(i).getDirection().y == -1 && buses.at(i).getY() >= 515 - 40 && buses.at(i).getY() <= 515 + safe_distance_bus + 100 && buses.at(i).getDestination() != entry::right) || CRight == false)
+            if ((buses.at(i).getDirection().y == -1 && buses.at(i).getY() >= 515 - 40 && buses.at(i).getY() <= 515 + safe_distance_bus + 150 && buses.at(i).getDestination() != entry::right && buses.at(i).getDestination() != entry::left) || CRight == false)
                 return false;
         }
     }
@@ -191,22 +182,22 @@ bool Car::canTurn(bool CTop, bool CBottom, bool CLeft, bool CRight, std::vector<
     {
         // si il tourne vers le haut
         if (this->getDestination() == entry::top && this->getDirection().x != 0) {
-            if ((bikes.at(i).getDirection().x == -1 && bikes.at(i).getDestination() != entry::top && bikes.at(i).getX() >= 515 - 20 && bikes.at(i).getX() <= 515 + safe_distance_bike + 50) || CTop == false)
+            if ((bikes.at(i).getDirection().x == -1 && bikes.at(i).getDestination() != entry::top && bikes.at(i).getX() >= 515 - 40 && bikes.at(i).getX() <= 515 + safe_distance_bike + 100) || CTop == false)
                 return false;
         }
         // si il tourne vers le bas
         if (this->getDestination() == entry::bottom && this->getDirection().x != 0) {
-            if ((bikes.at(i).getDirection().x == 1 && bikes.at(i).getDestination() != entry::bottom && bikes.at(i).getX() >= 485 - safe_distance_bike - 50 && bikes.at(i).getX() <= 458 + 20) || CBottom == false)
+            if ((bikes.at(i).getDirection().x == 1 && bikes.at(i).getDestination() != entry::bottom && bikes.at(i).getX() >= 485 - safe_distance_bike - 100 && bikes.at(i).getX() <= 458 + 40) || CBottom == false)
                 return false;
         }
         // si il tourne vers la gauche
         if (this->getDestination() == entry::left && this->getDirection().y != 0) {
-            if ((bikes.at(i).getDirection().y == 1 && bikes.at(i).getDestination() != entry::left && bikes.at(i).getY() >= 485 - safe_distance_bike - 50 && bikes.at(i).getY() <= 458 + 20) || CLeft == false)
+            if ((bikes.at(i).getDirection().y == 1 && bikes.at(i).getDestination() != entry::left && bikes.at(i).getY() >= 485 - safe_distance_bike - 100 && bikes.at(i).getY() <= 458 + 40) || CLeft == false)
                 return false;
         }
         // si il tourne vers la droite
         if (this->getDestination() == entry::right && this->getDirection().y != 0) {
-            if ((bikes.at(i).getDirection().y == -1 && bikes.at(i).getDestination() != entry::right && bikes.at(i).getY() >= 515 - 20 && bikes.at(i).getY() <= 515 + safe_distance_bike + 50) || CRight == false)
+            if ((bikes.at(i).getDirection().y == -1 && bikes.at(i).getDestination() != entry::right && bikes.at(i).getY() >= 515 - 40 && bikes.at(i).getY() <= 515 + safe_distance_bike + 100) || CRight == false)
                 return false;
         }
     }
@@ -215,22 +206,22 @@ bool Car::canTurn(bool CTop, bool CBottom, bool CLeft, bool CRight, std::vector<
     {
         if (cars.at(i).getShape().getPosition() != shape_.getPosition()) {
             if (this->getDestination() == entry::top && this->getDirection().x == 1) {
-                if ((cars.at(i).getDirection().x == -1 && cars.at(i).getDestination() != entry::top && cars.at(i).getDestination() != entry::bottom && cars.at(i).getX() >= 515 - 40 && cars.at(i).getX() <= 515 + safe_distance_car + 50) || CTop == false)
+                if ((cars.at(i).getDirection().x == -1 && cars.at(i).getDestination() != entry::top && cars.at(i).getDestination() != entry::bottom && cars.at(i).getX() >= 515 - 40 && cars.at(i).getX() <= 515 + safe_distance_car + 100) || CTop == false)
                     return false;
             }
             // si il tourne vers le bas
             if (this->getDestination() == entry::bottom && this->getDirection().x == -1) {
-                if ((cars.at(i).getDirection().x == 1 && cars.at(i).getDestination() != entry::bottom && cars.at(i).getX() >= 485 - safe_distance_car - 50 && cars.at(i).getX() <= 458 + 40) || CBottom == false)
+                if ((cars.at(i).getDirection().x == 1 && cars.at(i).getDestination() != entry::bottom && cars.at(i).getX() >= 485 - safe_distance_car - 100 && cars.at(i).getX() <= 458 + 40) || CBottom == false)
                     return false;
             }
             // si il tourne vers la gauche
             if (this->getDestination() == entry::left && this->getDirection().y == 1) {
-                if ((cars.at(i).getDirection().y == 1 && cars.at(i).getDestination() != entry::left && cars.at(i).getDestination() != entry::right && cars.at(i).getY() >= 485 - safe_distance_car - 50 && cars.at(i).getY() <= 458 + 40) || CLeft == false)
+                if ((cars.at(i).getDirection().y == 1 && cars.at(i).getDestination() != entry::left && cars.at(i).getDestination() != entry::right && cars.at(i).getY() >= 485 - safe_distance_car - 100 && cars.at(i).getY() <= 458 + 40) || CLeft == false)
                     return false;
             }
             // si il tourne vers la droite
             if (this->getDestination() == entry::right && this->getDirection().y == -1) {
-                if ((cars.at(i).getDirection().y == -1 && cars.at(i).getDestination() != entry::right && cars.at(i).getY() >= 515 - 40 && cars.at(i).getY() <= 515 + safe_distance_car + 50) || CRight == false)
+                if ((cars.at(i).getDirection().y == -1 && cars.at(i).getDestination() != entry::right && cars.at(i).getY() >= 515 - 40 && cars.at(i).getY() <= 515 + safe_distance_car + 100) || CRight == false)
                     return false;
             }
         }
