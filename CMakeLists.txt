@@ -15,7 +15,7 @@ if(MSVC)
     )
 endif()
 
-add_executable (traffic "run.cpp"  "lights.cpp" )
+add_executable (traffic "run.cpp"  "lights.cpp" "pedestrian.cpp" "car.cpp" "bus.cpp" "bikes.cpp")
 target_link_libraries(traffic sfml-graphics sfml-window)
 
 find_package (Threads)
